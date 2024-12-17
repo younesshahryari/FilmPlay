@@ -1,0 +1,54 @@
+package com.aparat.androidinterview.persentation.home.tabs.tvShows
+
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.aparat.androidinterview.data.repository.tvShow.TvShowRepository
+import com.aparat.androidinterview.persentation.model.TvShowModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class TvShowViewModel @Inject constructor(
+    private val repository: TvShowRepository
+) : ViewModel() {
+
+    private var page: Int = 1
+    private val _mainListItems = MutableStateFlow<List<TvShowModel>>(emptyList())
+    val mainListItems: StateFlow<List<TvShowModel>> get() = _mainListItems
+
+    val scrollState = mutableStateOf(LazyGridState(0, 0))
+
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> get() = _loading
+
+    init {
+        fetchData()
+    }
+
+    private fun fetchData() {
+        _loading.value = true
+        viewModelScope.launch {
+            val response = repository.getPopularTvShows(page)
+            val result = response.getOrNull()
+            result?.let {
+                val newList = _mainListItems.value.toMutableSet()
+                newList.addAll(it.results)
+                _mainListItems.value = newList.toList()
+            }
+            _loading.value = false
+        }
+    }
+
+    fun fetchNextPage() {
+        if (_loading.value.not()) {
+            page++
+            fetchData()
+        }
+    }
+}
+
