@@ -22,18 +22,17 @@ import com.aparat.androidinterview.persentation.navigation.Route
 
 @Composable
 fun HomeScreen(appNavController: NavHostController) {
+
     val tabsNavController = rememberNavController()
+    val currentTabNavItem = remember { mutableStateOf<BottomNavItem>(BottomNavItem.Movie) }
+    val tabNavBackStackEntry by tabsNavController.currentBackStackEntryAsState()
+    val currentTabsRoute = tabNavBackStackEntry?.destination?.route
 
-    val currentNavItem = remember { mutableStateOf<BottomNavItem>(BottomNavItem.Movie) }
-    val navBackStackEntry by tabsNavController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
-    LaunchedEffect(currentRoute) {
-        currentNavItem.value = getBottomNavItemByRoute(currentRoute)
+    LaunchedEffect(currentTabsRoute) {
+        currentTabNavItem.value = getBottomNavItemByRoute(currentTabsRoute)
     }
-    val tabsViewModelStoreOwner = appNavController.getBackStackEntry(Route.HomeRoute)
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Toolbar(currentNavItem.value) {
+        Toolbar(currentTabNavItem.value) {
             appNavController.navigate(Route.SearchRoute)
         }
     }, content = { paddingValue ->
@@ -42,14 +41,20 @@ fun HomeScreen(appNavController: NavHostController) {
                 appNavController.navigate(Route.MovieDetailScreenRoute(item.id))
             }, tvShowClicked = { item ->
                 appNavController.navigate(Route.TvShowDetailScreenRoute(item.id))
-            }, tabsViewModelStoreOwner = tabsViewModelStoreOwner,
+            },
                 tabsNavController = tabsNavController,
                 startDestination = BottomNavItem.Movie.route
             )
         }
     }, bottomBar = {
-        BottomNavigationBar(currentRoute) { item ->
-            tabsNavController.navigate(item)
+        BottomNavigationBar(currentTabsRoute) { item ->
+            tabsNavController.navigate(item){
+                popUpTo(tabsNavController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
         }
     })
 }

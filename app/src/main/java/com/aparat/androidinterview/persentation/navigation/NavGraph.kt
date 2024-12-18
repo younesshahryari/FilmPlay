@@ -29,7 +29,7 @@ fun NavGraph(
             TvShowDetailScreen(data.tvShowId)
         }
         composable<Route.SearchRoute> {
-            SearchScreen()
+            SearchScreen(appNavController)
         }
     }
 }

@@ -12,7 +12,6 @@ fun BottomNavigationBar(currentRoute: String?, onTabChange: (String) -> Unit) {
     val tabs = listOf(
         BottomNavItem.Movie,
         BottomNavItem.Show,
-        BottomNavItem.More
     )
     NavigationBar {
         tabs.forEachIndexed { _, tabBarItem ->

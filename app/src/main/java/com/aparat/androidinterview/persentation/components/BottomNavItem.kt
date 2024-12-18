@@ -2,7 +2,6 @@ package com.aparat.androidinterview.persentation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -32,20 +31,11 @@ sealed class BottomNavItem(
             hasToolbarSearch = false
         )
 
-    @Immutable
-    data object More :
-        BottomNavItem(
-            tabName = "More",
-            icon = Icons.Default.Menu,
-            toolbarTitle = "Menu",
-            hasToolbarSearch = false
-        )
 }
 
 fun getBottomNavItemByRoute(route: String?): BottomNavItem {
     return when (route) {
         BottomNavItem.Show.route -> BottomNavItem.Show
-        BottomNavItem.More.route -> BottomNavItem.More
         else -> BottomNavItem.Movie
     }
 }
