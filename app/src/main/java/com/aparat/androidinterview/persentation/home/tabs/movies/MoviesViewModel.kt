@@ -23,7 +23,6 @@ class MoviesViewModel @Inject constructor(
 
     val scrollState = mutableStateOf(LazyGridState(0, 0))
 
-
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> get() = _loading
 

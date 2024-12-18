@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.aparat.androidinterview.ui.theme.AparatAndroidInterviewTheme
 
 @Composable
-fun Toolbar(onSearchClicked: () -> Unit) {
+fun Toolbar(title: String, isShowSearch: Boolean, onSearchClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.primary)
@@ -30,35 +30,39 @@ fun Toolbar(onSearchClicked: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Popular Moves",
-            modifier = Modifier
-                .weight(1f),
+            text = title,
+            modifier = Modifier.weight(1f),
             maxLines = 1,
 
             color = MaterialTheme.colorScheme.onPrimary,
             style = MaterialTheme.typography.titleLarge,
         )
-        IconButton(
-            modifier = Modifier
-                .size(48.dp),
-            onClick = onSearchClicked,
-        ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
+        if (isShowSearch) {
+            SearchButtonUI(onSearchClicked)
         }
     }
 }
 
+@Composable
+private fun SearchButtonUI(onSearchClicked: () -> Unit) {
+    IconButton(
+        modifier = Modifier.size(48.dp),
+        onClick = onSearchClicked,
+    ) {
+        Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
 
 @Preview
 @Composable
 private fun Preview() {
     AparatAndroidInterviewTheme {
-        Toolbar() {
+        /*Toolbar() {
 
-        }
+        }*/
     }
 }

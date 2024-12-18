@@ -20,10 +20,7 @@ import com.aparat.androidinterview.persentation.components.TvShowItem
 import com.aparat.androidinterview.persentation.model.TvShowModel
 
 @Composable
-fun TvShowScreen(
-    viewModel: TvShowViewModel = hiltViewModel(),
-    tvShowClicked: (TvShowModel) -> Unit,
-) {
+fun TvShowScreen(viewModel: TvShowViewModel= hiltViewModel(), tvShowClicked: (TvShowModel) -> Unit,) {
 
     val list by viewModel.mainListItems.collectAsStateWithLifecycle()
     val isLoading by viewModel.loading.collectAsStateWithLifecycle()
@@ -51,7 +48,7 @@ fun TvShowScreen(
                 .weight(1f),
         ) {
             items(list, key = { item -> item.id }) { item ->
-                TvShowItem(item, tvShowClicked)
+                TvShowItem(item,tvShowClicked)
             }
         }
         if (isLoading) {
