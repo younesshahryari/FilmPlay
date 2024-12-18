@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.aparat.androidinterview.ui.theme.AparatAndroidInterviewTheme
 
 @Composable
-fun Toolbar(title: String, isShowSearch: Boolean, onSearchClicked: () -> Unit) {
+fun Toolbar(navItem: BottomNavItem, onSearchClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.primary)
@@ -30,14 +30,13 @@ fun Toolbar(title: String, isShowSearch: Boolean, onSearchClicked: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = title,
+            text = navItem.toolbarTitle,
             modifier = Modifier.weight(1f),
             maxLines = 1,
-
             color = MaterialTheme.colorScheme.onPrimary,
             style = MaterialTheme.typography.titleLarge,
         )
-        if (isShowSearch) {
+        if (navItem.hasToolbarSearch) {
             SearchButtonUI(onSearchClicked)
         }
     }

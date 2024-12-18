@@ -8,27 +8,47 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomNavItem(
-    val route: String,
+    val tabName: String,
     val icon: ImageVector,
-    val title: String,
+    val toolbarTitle: String,
+    val hasToolbarSearch: Boolean,
+    val route: String = tabName,
 ) {
     @Immutable
     data object Movie :
-        BottomNavItem(MOVIE_TAB_ROUTE_NAME, Icons.Default.Home, "Movies")
+        BottomNavItem(
+            tabName = "Movies",
+            icon = Icons.Default.Home,
+            toolbarTitle = "Popular Movies",
+            hasToolbarSearch = true
+        )
 
     @Immutable
     data object Show :
-        BottomNavItem(SHOW_TAB_ROUTE_NAME, Icons.Default.PlayArrow, "Shows")
+        BottomNavItem(
+            tabName = "Shows",
+            icon = Icons.Default.PlayArrow,
+            toolbarTitle = "Popular TvShows",
+            hasToolbarSearch = false
+        )
 
     @Immutable
     data object More :
-        BottomNavItem(MORE_TAB_ROUTE_NAME, Icons.Default.Menu, "More")
+        BottomNavItem(
+            tabName = "More",
+            icon = Icons.Default.Menu,
+            toolbarTitle = "Menu",
+            hasToolbarSearch = false
+        )
+}
 
-    private companion object {
-        const val MOVIE_TAB_ROUTE_NAME = "MOVIE_TAB_ROUTE_NAME"
-        const val SHOW_TAB_ROUTE_NAME = "SHOW_TAB_ROUTE_NAME"
-        const val MORE_TAB_ROUTE_NAME = "MORE_TAB_ROUTE_NAME"
+fun getBottomNavItemByRoute(route: String?): BottomNavItem {
+    return when (route) {
+        BottomNavItem.Show.route -> BottomNavItem.Show
+        BottomNavItem.More.route -> BottomNavItem.More
+        else -> BottomNavItem.Movie
     }
 }
+
 
 

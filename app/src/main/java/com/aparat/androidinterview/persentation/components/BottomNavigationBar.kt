@@ -26,10 +26,10 @@ fun BottomNavigationBar(currentRoute: String?, onTabChange: (String) -> Unit) {
                         isSelected = currentRoute == tabBarItem.route,
                         selectedIcon = tabBarItem.icon,
                         unselectedIcon = tabBarItem.icon,
-                        title = tabBarItem.title,
+                        title = tabBarItem.tabName,
                     )
                 },
-                label = { Text(tabBarItem.title) })
+                label = { Text(tabBarItem.tabName) })
         }
     }
 }

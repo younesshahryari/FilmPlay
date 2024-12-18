@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.aparat.androidinterview.persentation.components.BottomNavigationBar
 import com.aparat.androidinterview.persentation.components.Toolbar
 import com.aparat.androidinterview.persentation.components.BottomNavItem
+import com.aparat.androidinterview.persentation.components.getBottomNavItemByRoute
 import com.aparat.androidinterview.persentation.home.navigation.BottomNavigationNavGraph
 import com.aparat.androidinterview.persentation.navigation.Route
 
@@ -23,33 +24,16 @@ import com.aparat.androidinterview.persentation.navigation.Route
 fun HomeScreen(appNavController: NavHostController) {
     val tabsNavController = rememberNavController()
 
-    val toolbarTitle = remember { mutableStateOf(BottomNavItem.Movie.title) }
-    val isNeedToolbarSearch = remember { mutableStateOf(false) }
-
+    val currentNavItem = remember { mutableStateOf<BottomNavItem>(BottomNavItem.Movie) }
     val navBackStackEntry by tabsNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     LaunchedEffect(currentRoute) {
-        when (currentRoute) {
-            BottomNavItem.Movie.route -> {
-                toolbarTitle.value = BottomNavItem.Movie.title
-                isNeedToolbarSearch.value = true
-            }
-
-            BottomNavItem.More.route -> {
-                toolbarTitle.value = BottomNavItem.More.title
-                isNeedToolbarSearch.value = false
-            }
-
-            BottomNavItem.Show.route -> {
-                toolbarTitle.value = BottomNavItem.Show.title
-                isNeedToolbarSearch.value = false
-            }
-        }
+        currentNavItem.value = getBottomNavItemByRoute(currentRoute)
     }
     val tabsViewModelStoreOwner = appNavController.getBackStackEntry(Route.HomeRoute)
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Toolbar(toolbarTitle.value, isNeedToolbarSearch.value) {
+        Toolbar(currentNavItem.value) {
             appNavController.navigate(Route.SearchRoute)
         }
     }, content = { paddingValue ->
@@ -69,3 +53,4 @@ fun HomeScreen(appNavController: NavHostController) {
         }
     })
 }
+
