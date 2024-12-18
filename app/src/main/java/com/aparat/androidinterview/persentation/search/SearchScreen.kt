@@ -1,12 +1,15 @@
 package com.aparat.androidinterview.persentation.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -14,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -31,17 +36,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.aparat.androidinterview.persentation.components.MovieItem
+import com.aparat.androidinterview.persentation.navigation.Route
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(navController: NavHostController) {
+
     val viewModel: SearchViewModel = hiltViewModel()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val list by viewModel.mainListItems.collectAsStateWithLifecycle()
     val isLoading by viewModel.loading.collectAsStateWithLifecycle()
     val isNoResult by viewModel.noResult.collectAsStateWithLifecycle()
-    val isError by viewModel.error.collectAsStateWithLifecycle()
+    val error by viewModel.error.collectAsStateWithLifecycle()
+    val isError = !error.isNullOrEmpty()
+
     val lazyGridState = rememberLazyGridState()
+    LaunchedEffect(lazyGridState) {
+        snapshotFlow {
+            lazyGridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+        }.collect { lastVisibleIndex ->
+            val threshold = 2
+            val countToRequest = list.size - 1 - threshold
+            if (lastVisibleIndex >= countToRequest && !isLoading) {
+                viewModel.fetchNextPage()
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -52,63 +73,82 @@ fun SearchScreen() {
             )
         }
     ) { paddingValues ->
-        LaunchedEffect(lazyGridState) {
-            snapshotFlow { lazyGridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0 }
-                .collect { lastVisibleIndex ->
-                    val threshold = 2
-                    val countToRequest = list.size - 1 - threshold
-                    if (lastVisibleIndex >= countToRequest && !isLoading) {
-                        viewModel.fetchNextPage()
-                    }
-                }
-        }
-
-        Column(modifier = Modifier.padding(paddingValues)) {
-            if (isNoResult) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "No Result!",
-                    textAlign = TextAlign.Center
-                )
-            }
-            if (isError) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Error!",
-                    textAlign = TextAlign.Center
-                )
-            }
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                state = lazyGridState,
-                contentPadding = PaddingValues(top = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-            ) {
-                items(list, key = { item -> item.id }) { item ->
-                    MovieItem(item) {
-
-                    }
+        LazyVerticalGrid(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            columns = GridCells.Fixed(3),
+            state = lazyGridState,
+            contentPadding = PaddingValues(top = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(list, key = { item ->
+                item.id
+            }) { item ->
+                MovieItem(item) {
+                    navController.navigate(Route.MovieDetailScreenRoute(it.id))
                 }
             }
-            if (isLoading) {
-                Text("Loading...")
+            if (isLoading || isError || isNoResult) {
+                item(span = { GridItemSpan(3) }, key = "loadBox") {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (isLoading) {
+                            LoadingContent()
+                        } else if (isError) {
+                            ErrorContent(error!!) {
+                                viewModel.retry()
+                            }
+                        } else {
+                            NoResultContent()
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun SearchBar(
+private fun LoadingContent() {
+    CircularProgressIndicator(
+        modifier = Modifier
+            .size(40.dp)
+    )
+}
+
+@Composable
+private fun NoResultContent() {
+    Text(
+        modifier = Modifier.fillMaxWidth(),
+        text = "No Result!",
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+private fun ErrorContent(error: String, onRetryClicked: () -> Unit) {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onRetryClicked.invoke() },
+        text = error,
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+private fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-
     TextField(
         value = query,
         onValueChange = onQueryChange,

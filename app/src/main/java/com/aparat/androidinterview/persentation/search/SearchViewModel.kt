@@ -1,8 +1,15 @@
 package com.aparat.androidinterview.persentation.search
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import arrow.retrofit.adapter.either.networkhandling.CallError
+import arrow.retrofit.adapter.either.networkhandling.HttpError
+import arrow.retrofit.adapter.either.networkhandling.IOError
+import arrow.retrofit.adapter.either.networkhandling.UnexpectedCallError
+import com.aparat.androidinterview.FIRST_PAGE_NUMBER
 import com.aparat.androidinterview.data.repository.movie.MovieRepository
+import com.aparat.androidinterview.persentation.model.ListModel
 import com.aparat.androidinterview.persentation.model.MovieModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,11 +25,7 @@ class SearchViewModel @Inject constructor(
     private val repository: MovieRepository
 ) : ViewModel() {
 
-    private companion object {
-        const val INITIAL_PAGE_NUMBER = 1
-    }
-
-    private var page: Int = INITIAL_PAGE_NUMBER
+    private var page: Int = FIRST_PAGE_NUMBER
     private var totalPages: Int = Int.MAX_VALUE
     private val _mainListItems = MutableStateFlow<List<MovieModel>>(emptyList())
     val mainListItems: StateFlow<List<MovieModel>> get() = _mainListItems
@@ -36,8 +39,8 @@ class SearchViewModel @Inject constructor(
     private val _noResult = MutableStateFlow(false)
     val noResult: StateFlow<Boolean> get() = _noResult
 
-    private val _error = MutableStateFlow(false)
-    val error: StateFlow<Boolean> get() = _error
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> get() = _error
 
     private var searchJob: Job? = null
 
@@ -46,6 +49,10 @@ class SearchViewModel @Inject constructor(
             page++
             fetchData()
         }
+    }
+
+    fun retry() {
+        fetchData()
     }
 
     fun updateSearchQuery(query: String) {
@@ -59,36 +66,45 @@ class SearchViewModel @Inject constructor(
 
     private fun reset() {
         searchJob?.cancel()
-        page = INITIAL_PAGE_NUMBER
+        page = FIRST_PAGE_NUMBER
         _mainListItems.value = emptyList()
         _loading.value = false
         _noResult.value = false
-        _error.value = false
+        _error.value = null
     }
 
     private fun fetchData() {
         _loading.value = true
         searchJob = viewModelScope.launch(Dispatchers.IO) {
             val response = repository.searchMovie(_searchQuery.value, page)
-            val result = response.getOrNull()
+            val data = response.getOrNull()
             withContext(Dispatchers.Main) {
-                result?.let {
-                    totalPages = it.totalPages
-                    val newList = _mainListItems.value.toMutableSet()
-                    newList.addAll(it.results)
-                    _mainListItems.value = newList.toList()
-                    if (_mainListItems.value.isEmpty()) {
-                        _noResult.value = true
-                    }
-                }
-                val error = response.leftOrNull()
-                error?.let {
-                    if (page != INITIAL_PAGE_NUMBER) {
-                        _error.value = true
-                    }
+                data?.let {
+                    handleData(it)
+                } ?: run {
+                    handleError(response.leftOrNull())
                 }
                 _loading.value = false
             }
+        }
+    }
+
+    private fun handleData(data: ListModel<MovieModel>) {
+        totalPages = data.totalPages
+        val newList = _mainListItems.value.toMutableSet()
+        newList.addAll(data.results)
+        _mainListItems.value = newList.toList()
+        if (newList.isEmpty()) {
+            _noResult.value = true
+        }
+    }
+
+    private fun handleError(error: CallError?) {
+        _error.value = when (error) {
+            is HttpError -> "Http Error message! Tap to retry!"
+            is IOError -> "Io Error message! Tap to retry!"
+            is UnexpectedCallError -> "Unexpected call error message! Tap to retry!"
+            else -> "Unknown Error! Tap to retry!"
         }
     }
 }
