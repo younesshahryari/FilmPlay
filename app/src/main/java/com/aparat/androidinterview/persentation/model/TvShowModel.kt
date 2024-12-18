@@ -5,6 +5,6 @@ data class TvShowModel(
     val title: String,
     val date: String,
     val genres: List<Int>,
-    val thumbnail: String,
+    val thumbnail: String?,
     val voteAverage: Float,
 )

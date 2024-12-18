@@ -20,8 +20,7 @@ import com.aparat.androidinterview.persentation.components.MovieItem
 import com.aparat.androidinterview.persentation.model.MovieModel
 
 @Composable
-fun MoviesScreen(viewModel: MoviesViewModel = hiltViewModel(), itemClicked: (MovieModel) -> Unit) {
-
+fun MoviesScreen(viewModel: MoviesViewModel = hiltViewModel(), movieClicked: (MovieModel) -> Unit) {
     val list by viewModel.mainListItems.collectAsStateWithLifecycle()
     val isLoading by viewModel.loading.collectAsStateWithLifecycle()
     val lazyGridState = viewModel.scrollState.value
@@ -48,7 +47,7 @@ fun MoviesScreen(viewModel: MoviesViewModel = hiltViewModel(), itemClicked: (Mov
                 .weight(1f),
         ) {
             items(list, key = { item -> item.id }) { item ->
-                MovieItem(item, itemClicked)
+                MovieItem(item, movieClicked)
             }
         }
         if (isLoading) {

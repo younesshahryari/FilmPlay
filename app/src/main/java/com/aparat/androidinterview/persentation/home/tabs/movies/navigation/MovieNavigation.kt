@@ -2,8 +2,11 @@ package com.aparat.androidinterview.persentation.home.tabs.movies.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.aparat.androidinterview.persentation.components.BottomNavItem
+import com.aparat.androidinterview.persentation.home.tabs.more.MoreScreen
+import com.aparat.androidinterview.persentation.home.tabs.movies.MoviesScreen
+import com.aparat.androidinterview.persentation.model.MovieModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,21 +15,20 @@ data class MoviesRoute(
     val initialTopicId: String? = null,
 )
 
-fun NavGraphBuilder.moviesScreen(
+fun NavGraphBuilder.moviesScreens(
+    movieClicked: (MovieModel) -> Unit,
 ) {
-    composable<MoviesRoute> {
-        MoviesRoute()
+    composable(BottomNavItem.Movie.route) {
+        MoviesScreen(movieClicked = movieClicked)
     }
-
-    composable<MoviesRoute> {
-        MoviesRoute()
-    }
+   // composable(BottomNavItem.Show.route) { TvShowScreen() }
+    composable(BottomNavItem.More.route) { MoreScreen() }
 }
 
 
 fun NavController.navigateToMovies(
     initialTopicId: String? = null,
-    navOptions: NavOptions? = null,
+    itemClicked: (MovieModel) -> Unit,
 ) {
-    navigate(route = MoviesRoute(initialTopicId), navOptions)
+    //navigate(route = MoviesRoute(initialTopicId), itemClicked)
 }

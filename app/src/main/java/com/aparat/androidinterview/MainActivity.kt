@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
-import com.aparat.androidinterview.persentation.home.navigation.BottomNavigationNavGraph
+import androidx.navigation.compose.rememberNavController
 import com.aparat.androidinterview.persentation.navigation.NavGraph
 import com.aparat.androidinterview.persentation.navigation.Route
 import com.aparat.androidinterview.ui.theme.AparatAndroidInterviewTheme
@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AparatAndroidInterviewTheme {
+                val navController = rememberNavController()
                 val systemUiColor = rememberSystemUiController()
                 systemUiColor.setSystemBarsColor(
                     color = MaterialTheme.colorScheme.secondary,
@@ -34,7 +35,8 @@ class MainActivity : ComponentActivity() {
                         .statusBarsPadding()
                         .fillMaxSize()
                 ) {
-                    NavGraph(startDestination = Route.HomeRoute)
+
+                    NavGraph(navController, startDestination = Route.HomeRoute)
                 }
             }
         }

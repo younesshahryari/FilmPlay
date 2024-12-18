@@ -17,9 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aparat.androidinterview.persentation.components.TvShowItem
+import com.aparat.androidinterview.persentation.model.TvShowModel
 
 @Composable
-fun TvShowScreen(viewModel: TvShowViewModel= hiltViewModel()) {
+fun TvShowScreen(
+    viewModel: TvShowViewModel = hiltViewModel(),
+    tvShowClicked: (TvShowModel) -> Unit,
+) {
 
     val list by viewModel.mainListItems.collectAsStateWithLifecycle()
     val isLoading by viewModel.loading.collectAsStateWithLifecycle()
@@ -47,9 +51,7 @@ fun TvShowScreen(viewModel: TvShowViewModel= hiltViewModel()) {
                 .weight(1f),
         ) {
             items(list, key = { item -> item.id }) { item ->
-                TvShowItem(item) {
-
-                }
+                TvShowItem(item, tvShowClicked)
             }
         }
         if (isLoading) {
