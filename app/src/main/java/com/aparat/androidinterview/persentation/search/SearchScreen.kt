@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.aparat.androidinterview.LIST_GRID_COUNT
 import com.aparat.androidinterview.persentation.components.MovieItem
 import com.aparat.androidinterview.persentation.navigation.Route
 
@@ -44,11 +45,11 @@ import com.aparat.androidinterview.persentation.navigation.Route
 fun SearchScreen(navController: NavHostController) {
 
     val viewModel: SearchViewModel = hiltViewModel()
-    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-    val list by viewModel.mainListItems.collectAsStateWithLifecycle()
-    val isLoading by viewModel.loading.collectAsStateWithLifecycle()
-    val isNoResult by viewModel.noResult.collectAsStateWithLifecycle()
-    val error by viewModel.error.collectAsStateWithLifecycle()
+    val searchQuery by viewModel.searchQueryState.collectAsStateWithLifecycle()
+    val list by viewModel.listItems.collectAsStateWithLifecycle()
+    val isLoading by viewModel.loadingState.collectAsStateWithLifecycle()
+    val isNoResult by viewModel.noResultState.collectAsStateWithLifecycle()
+    val error by viewModel.errorState.collectAsStateWithLifecycle()
     val isError = !error.isNullOrEmpty()
 
     val lazyGridState = rememberLazyGridState()
@@ -77,7 +78,7 @@ fun SearchScreen(navController: NavHostController) {
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Fixed(LIST_GRID_COUNT),
             state = lazyGridState,
             contentPadding = PaddingValues(top = 12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -91,7 +92,7 @@ fun SearchScreen(navController: NavHostController) {
                 }
             }
             if (isLoading || isError || isNoResult) {
-                item(span = { GridItemSpan(3) }, key = "loadBox") {
+                item(span = { GridItemSpan(LIST_GRID_COUNT) }, key = "messageBox") {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -114,6 +115,7 @@ fun SearchScreen(navController: NavHostController) {
     }
 }
 
+
 @Composable
 private fun LoadingContent() {
     CircularProgressIndicator(
@@ -127,7 +129,7 @@ private fun NoResultContent() {
     Text(
         modifier = Modifier.fillMaxWidth(),
         text = "No Result!",
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
     )
 }
 

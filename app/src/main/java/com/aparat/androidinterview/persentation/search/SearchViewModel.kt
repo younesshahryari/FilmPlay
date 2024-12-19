@@ -1,6 +1,5 @@
 package com.aparat.androidinterview.persentation.search
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.retrofit.adapter.either.networkhandling.CallError
@@ -14,6 +13,7 @@ import com.aparat.androidinterview.persentation.model.MovieModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -25,28 +25,76 @@ class SearchViewModel @Inject constructor(
     private val repository: MovieRepository
 ) : ViewModel() {
 
-    private var page: Int = FIRST_PAGE_NUMBER
+    private var pageCounter: Int = FIRST_PAGE_NUMBER
     private var totalPages: Int = Int.MAX_VALUE
-    private val _mainListItems = MutableStateFlow<List<MovieModel>>(emptyList())
-    val mainListItems: StateFlow<List<MovieModel>> get() = _mainListItems
 
-    private val _searchQuery = MutableStateFlow("")
-    val searchQuery: StateFlow<String> = _searchQuery
+    private val _listItems = MutableStateFlow<MutableList<MovieModel>>(mutableListOf())
+    val listItems: StateFlow<List<MovieModel>> get() = _listItems
 
-    private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> get() = _loading
+    private val _searchQueryState = MutableStateFlow("")
+    val searchQueryState: StateFlow<String> = _searchQueryState
 
-    private val _noResult = MutableStateFlow(false)
-    val noResult: StateFlow<Boolean> get() = _noResult
+    private val _loadingState = MutableStateFlow(false)
+    val loadingState: StateFlow<Boolean> get() = _loadingState
 
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> get() = _error
+    private val _noResultState = MutableStateFlow(false)
+    val noResultState: StateFlow<Boolean> get() = _noResultState
+
+    private val _errorState = MutableStateFlow<String?>(null)
+    val errorState: StateFlow<String?> get() = _errorState
 
     private var searchJob: Job? = null
+    private var searchByQueryJob: Job? = null
+
+
+    fun performSearch() {
+        cancelSearchByQueryJob()
+        reset()
+        fetchData()
+    }
+
+    private fun reset() {
+        cancelSearchJob()
+        resetPageCounter()
+        setListData(mutableListOf())
+        setError(null)
+        setNoResult(false)
+        setLoading(false)
+    }
+
+    private fun fetchData() {
+        setLoading(true)
+        searchJob = viewModelScope.launch(Dispatchers.IO) {
+            val response = repository.searchMovie(_searchQueryState.value, pageCounter)
+            val data = response.getOrNull()
+            withContext(Dispatchers.Main) {
+                data?.let {
+                    handleData(it)
+                } ?: run {
+                    handleError(response.leftOrNull())
+                }
+                setLoading(false)
+            }
+        }
+    }
+
+    fun updateSearchQuery(query: String) {
+        _searchQueryState.value = query
+        initSearchByQueryJob()
+    }
+
+    private fun initSearchByQueryJob() {
+        cancelSearchByQueryJob()
+        searchByQueryJob = viewModelScope.launch {
+            delay(PERFORM_SEARCH_BY_QUERY_DELAY_MILLISECOND)
+            reset()
+            fetchData()
+        }
+    }
 
     fun fetchNextPage() {
-        if (_loading.value.not() && _searchQuery.value.isNotEmpty() && totalPages > page) {
-            page++
+        if (!isLoading() && !isTotalPagesLoaded() && !isQueryEmpty()) {
+            pageCounter++
             fetchData()
         }
     }
@@ -55,58 +103,71 @@ class SearchViewModel @Inject constructor(
         fetchData()
     }
 
-    fun updateSearchQuery(query: String) {
-        _searchQuery.value = query
-    }
-
-    fun performSearch() {
-        reset()
-        fetchData()
-    }
-
-    private fun reset() {
-        searchJob?.cancel()
-        page = FIRST_PAGE_NUMBER
-        _mainListItems.value = emptyList()
-        _loading.value = false
-        _noResult.value = false
-        _error.value = null
-    }
-
-    private fun fetchData() {
-        _loading.value = true
-        searchJob = viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.searchMovie(_searchQuery.value, page)
-            val data = response.getOrNull()
-            withContext(Dispatchers.Main) {
-                data?.let {
-                    handleData(it)
-                } ?: run {
-                    handleError(response.leftOrNull())
-                }
-                _loading.value = false
-            }
-        }
-    }
 
     private fun handleData(data: ListModel<MovieModel>) {
         totalPages = data.totalPages
-        val newList = _mainListItems.value.toMutableSet()
+        val newList = _listItems.value
         newList.addAll(data.results)
-        _mainListItems.value = newList.toList()
-        if (newList.isEmpty()) {
-            _noResult.value = true
-        }
+        setListData(newList)
+        setNoResult(newList.isEmpty())
     }
 
     private fun handleError(error: CallError?) {
-        _error.value = when (error) {
-            is HttpError -> "Http Error message! Tap to retry!"
-            is IOError -> "Io Error message! Tap to retry!"
-            is UnexpectedCallError -> "Unexpected call error message! Tap to retry!"
-            else -> "Unknown Error! Tap to retry!"
-        }
+        setError(
+            when (error) {
+                is HttpError -> "Http Error message! Tap to retry!"
+                is IOError -> "Io Error message! Tap to retry!"
+                is UnexpectedCallError -> "Unexpected call error message! Tap to retry!"
+                else -> "Unknown Error! Tap to retry!"
+            }
+        )
     }
+
+    private fun cancelSearchByQueryJob() {
+        searchByQueryJob?.cancel()
+    }
+
+    private fun cancelSearchJob() {
+        searchJob?.cancel()
+    }
+
+    private fun resetPageCounter() {
+        pageCounter = FIRST_PAGE_NUMBER
+    }
+
+    private fun setError(errorText: String?) {
+        _errorState.value = errorText
+    }
+
+    private fun setNoResult(isEnable: Boolean) {
+        _noResultState.value = isEnable
+    }
+
+    private fun setLoading(isLoading: Boolean) {
+        _loadingState.value = isLoading
+    }
+
+    private fun setListData(list: MutableList<MovieModel>) {
+        _listItems.value = list
+    }
+
+    private fun isLoading(): Boolean {
+        return _loadingState.value
+    }
+
+    private fun isQueryEmpty(): Boolean {
+        return _searchQueryState.value.isEmpty()
+    }
+
+    private fun isTotalPagesLoaded(): Boolean {
+        return totalPages <= pageCounter
+    }
+
+    private companion object {
+        const val PERFORM_SEARCH_BY_QUERY_DELAY_MILLISECOND = 1000L
+    }
+
+
 }
 
 
