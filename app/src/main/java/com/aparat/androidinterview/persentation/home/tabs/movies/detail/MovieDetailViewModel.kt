@@ -1,55 +1,70 @@
 package com.aparat.androidinterview.persentation.home.tabs.movies.detail
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import arrow.retrofit.adapter.either.networkhandling.CallError
 import com.aparat.androidinterview.data.repository.movie.MovieRepository
+import com.aparat.androidinterview.persentation.extensions.toHumanReadableText
 import com.aparat.androidinterview.persentation.model.MovieModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
-    private val repository: MovieRepository
+    private val repository: MovieRepository,
 ) : ViewModel() {
 
-    private val _data = MutableStateFlow<MovieModel?>(null)
-    val data: StateFlow<MovieModel?> get() = _data
+    private val _dataState = MutableStateFlow<MovieModel?>(null)
+    val dataState: StateFlow<MovieModel?> get() = _dataState
 
-    private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> get() = _loading
+    private val _loadingState = MutableStateFlow(false)
+    val loadingState: StateFlow<Boolean> get() = _loadingState
 
-    private val _error = MutableStateFlow(false)
-    val error: StateFlow<Boolean> get() = _error
+    private val _errorState = MutableStateFlow<String?>(null)
+    val errorState: StateFlow<String?> get() = _errorState
 
     fun fetchData(id: Int) {
-        _loading.value = true
+        setLoading(true)
         viewModelScope.launch {
-            val response = repository.getMovie(id)
-            val result = response.getOrNull()
-            result?.let {
-                _data.value = it
+            val response = withContext(Dispatchers.IO) {
+                repository.getMovie(id)
             }
-            val error = response.leftOrNull()
-            error?.let {
-                when (it) {
-                    is arrow.retrofit.adapter.either.networkhandling.HttpError -> Log.i("response",it.message)
-                    is arrow.retrofit.adapter.either.networkhandling.IOError -> Log.i("response",it.cause.message+"")
-                    is arrow.retrofit.adapter.either.networkhandling.UnexpectedCallError -> Log.i("response",it.cause.message+"")
-                }
-                _error.value = true
+            response.getOrNull()?.let {
+                setListData(it)
+            } ?: run {
+                handleError(response.leftOrNull())
             }
-            _loading.value = false
+            setLoading(false)
         }
     }
 
+    private fun handleError(error: CallError?) {
+        setError(error.toHumanReadableText())
+    }
+
     fun retry(id: Int) {
-        _error.value = false
+        setError(null)
         fetchData(id)
     }
+
+    private fun setListData(data: MovieModel) {
+        _dataState.value = data
+    }
+
+    private fun setLoading(isLoading: Boolean) {
+        _loadingState.value = isLoading
+    }
+
+    private fun setError(errorText: String?) {
+        _errorState.value = errorText
+    }
+
+
 }
 
 

@@ -1,30 +1,44 @@
 package com.aparat.androidinterview.persentation.home.tabs.tvShows
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aparat.androidinterview.LIST_GRID_COUNT
+import com.aparat.androidinterview.persentation.components.ErrorContent
+import com.aparat.androidinterview.persentation.components.LoadingContent
+import com.aparat.androidinterview.persentation.components.NoResultContent
 import com.aparat.androidinterview.persentation.components.TvShowItem
 import com.aparat.androidinterview.persentation.model.TvShowModel
 
 @Composable
-fun TvShowScreen(viewModel: TvShowViewModel= hiltViewModel(), tvShowClicked: (TvShowModel) -> Unit,) {
+fun TvShowScreen(
+    viewModel: TvShowViewModel = hiltViewModel(),
+    tvShowClicked: (TvShowModel) -> Unit,
+) {
 
-    val list by viewModel.mainListItems.collectAsStateWithLifecycle()
-    val isLoading by viewModel.loading.collectAsStateWithLifecycle()
+    val list by viewModel.listItems.collectAsStateWithLifecycle()
+    val isLoading by viewModel.loadingState.collectAsStateWithLifecycle()
+    val isNoResult by viewModel.noResultState.collectAsStateWithLifecycle()
+    val error by viewModel.errorState.collectAsStateWithLifecycle()
+    val isError = !error.isNullOrEmpty()
     val lazyGridState = rememberLazyGridState()
 
     LaunchedEffect(lazyGridState) {
@@ -39,22 +53,39 @@ fun TvShowScreen(viewModel: TvShowViewModel= hiltViewModel(), tvShowClicked: (Tv
     }
     Column {
         LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
+            modifier = Modifier
+                .fillMaxSize(),
+            columns = GridCells.Fixed(LIST_GRID_COUNT),
             state = lazyGridState,
             contentPadding = PaddingValues(top = 12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
         ) {
-            items(list, key = { item -> item.id }) { item ->
-                TvShowItem(item,tvShowClicked)
+            items(list, key = { item ->
+                item.id
+            }) { item ->
+                TvShowItem(item, tvShowClicked)
+            }
+            if (isLoading || isError || isNoResult) {
+                item(span = { GridItemSpan(LIST_GRID_COUNT) }, key = "messageBox") {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (isLoading) {
+                            LoadingContent()
+                        } else if (isError) {
+                            ErrorContent(error!!) {
+                                viewModel.retry()
+                            }
+                        } else {
+                            NoResultContent()
+                        }
+                    }
+                }
             }
         }
-        if (isLoading) {
-            Text("Loading...")
-        }
     }
-
 }

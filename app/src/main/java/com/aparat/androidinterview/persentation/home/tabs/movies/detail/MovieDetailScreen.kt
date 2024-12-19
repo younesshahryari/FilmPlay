@@ -25,9 +25,10 @@ import com.aparat.androidinterview.persentation.model.MovieModel
 @Composable
 fun MovieDetailScreen(itemId: Int) {
     val viewModel: MovieDetailViewModel = hiltViewModel()
-    val data by viewModel.data.collectAsStateWithLifecycle()
-    val isLoading by viewModel.loading.collectAsStateWithLifecycle()
-    val isError by viewModel.error.collectAsStateWithLifecycle()
+    val data by viewModel.dataState.collectAsStateWithLifecycle()
+    val isLoading by viewModel.loadingState.collectAsStateWithLifecycle()
+    val error by viewModel.errorState.collectAsStateWithLifecycle()
+    val isError = !error.isNullOrEmpty()
 
     LaunchedEffect(Unit) { viewModel.fetchData(itemId) }
 
@@ -44,7 +45,7 @@ fun MovieDetailScreen(itemId: Int) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { viewModel.retry(itemId) },
-            text = "Error!, tap to retry.",
+            text = error!!,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onBackground,
         )

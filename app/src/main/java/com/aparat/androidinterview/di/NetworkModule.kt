@@ -2,17 +2,9 @@ package com.aparat.androidinterview.di
 
 import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.aparat.androidinterview.BuildConfig
-import com.aparat.androidinterview.data.remoteData.dataSource.movie.MovieRemoteDataSource
-import com.aparat.androidinterview.data.remoteData.dataSource.movie.MovieRemoteDataSourceImpl
-import com.aparat.androidinterview.data.remoteData.dataSource.tvShow.TvShowRemoteDataSource
-import com.aparat.androidinterview.data.remoteData.dataSource.tvShow.TvShowRemoteDataSourceImpl
 import com.aparat.androidinterview.data.remoteData.service.AuthInterceptor
 import com.aparat.androidinterview.data.remoteData.service.MovieApi
 import com.aparat.androidinterview.data.remoteData.service.TvShowApi
-import com.aparat.androidinterview.data.repository.movie.MovieRepository
-import com.aparat.androidinterview.data.repository.movie.MovieRepositoryImpl
-import com.aparat.androidinterview.data.repository.tvShow.TvShowRepository
-import com.aparat.androidinterview.data.repository.tvShow.TvShowRepositoryImpl
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -75,19 +67,4 @@ object NetworkModule {
     @Provides
     fun provideTvShowApi(retrofit: Retrofit): TvShowApi = retrofit.create()
 
-    @Provides
-    fun provideMovieRemoteDataSource(movieApi: MovieApi): MovieRemoteDataSource =
-        MovieRemoteDataSourceImpl(movieApi)
-
-    @Provides
-    fun provideTvShowRemoteDataSource(tvShowApi: TvShowApi): TvShowRemoteDataSource =
-        TvShowRemoteDataSourceImpl(tvShowApi)
-
-    @Provides
-    fun provideMovieRepository(movieRemoteDataSource: MovieRemoteDataSource): MovieRepository =
-        MovieRepositoryImpl(movieRemoteDataSource)
-
-    @Provides
-    fun provideTvShowRepository(tvShowRemoteDataSource: TvShowRemoteDataSource): TvShowRepository =
-        TvShowRepositoryImpl(tvShowRemoteDataSource)
 }
