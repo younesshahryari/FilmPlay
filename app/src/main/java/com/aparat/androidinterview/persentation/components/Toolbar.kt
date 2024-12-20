@@ -14,18 +14,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
-import com.aparat.androidinterview.persentation.home.BottomNavItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Toolbar(navItem: BottomNavItem, onSearchClicked: () -> Unit) {
+fun Toolbar(title: String, showSearchBar: Boolean, onSearchClicked: () -> Unit) {
     TopAppBar(
-        title = { Text(navItem.toolbarTitle, style = MaterialTheme.typography.titleLarge) },
+        title = { Text(title, style = MaterialTheme.typography.titleLarge) },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
         modifier = Modifier.shadow(elevation = 10.dp), actions = {
-            SearchButtonUI(onSearchClicked)
+            if (showSearchBar) {
+                SearchButtonUI(onSearchClicked)
+            }
         }
     )
 }

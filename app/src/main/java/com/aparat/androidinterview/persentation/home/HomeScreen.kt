@@ -28,7 +28,7 @@ fun HomeScreen(appNavController: NavHostController) {
         currentTabNavItem.value = getBottomNavItemByRoute(currentTabsRoute)
     }
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Toolbar(currentTabNavItem.value) {
+        Toolbar(currentTabNavItem.value.toolbarTitle, true) {
             if (currentTabNavItem.value == BottomNavItem.Movie) {
                 appNavController.navigate(Route.SearchMovieRoute)
             } else {
