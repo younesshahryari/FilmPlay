@@ -72,7 +72,6 @@ internal val Typography = Typography(
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp,
     ),
-    // Default text style
     bodyLarge = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
@@ -95,7 +94,6 @@ internal val Typography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 0.4.sp,
     ),
-    // Used for Button
     labelLarge = TextStyle(
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
@@ -106,7 +104,6 @@ internal val Typography = Typography(
             trim = Trim.LastLineBottom,
         ),
     ),
-    // Used for Navigation items
     labelMedium = TextStyle(
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
@@ -117,7 +114,6 @@ internal val Typography = Typography(
             trim = Trim.LastLineBottom,
         ),
     ),
-    // Used for Tag
     labelSmall = TextStyle(
         fontWeight = FontWeight.Medium,
         fontSize = 10.sp,

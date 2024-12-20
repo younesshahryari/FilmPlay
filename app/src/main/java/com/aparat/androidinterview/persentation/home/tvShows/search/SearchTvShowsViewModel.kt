@@ -83,6 +83,7 @@ class SearchTvShowsViewModel @Inject constructor(
         if (!isQueryEmpty()) {
             initSearchByQueryJob()
         } else {
+            cancelSearchByQueryJob()
             reset()
         }
     }

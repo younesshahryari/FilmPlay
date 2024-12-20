@@ -81,6 +81,7 @@ class SearchMovieViewModel @Inject constructor(
         if (!isQueryEmpty()) {
             initSearchByQueryJob()
         } else {
+            cancelSearchByQueryJob()
             reset()
         }
     }

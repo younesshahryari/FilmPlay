@@ -1,6 +1,7 @@
 package com.aparat.androidinterview.persentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -24,6 +25,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 
@@ -49,6 +51,7 @@ fun TopAppBarWithSearchBar(
                 shape = RoundedCornerShape(100),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(vertical = 4.dp)
                     .focusRequester(focusRequester)
                     .wrapContentHeight(),
                 value = query,
@@ -59,7 +62,7 @@ fun TopAppBarWithSearchBar(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 ),
-                textStyle = MaterialTheme.typography.titleMedium,
+                textStyle = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Normal),
                 trailingIcon = {
                     if (query.isNotEmpty()) {
                         IconButton(onClick = onClearClicked) {
