@@ -14,6 +14,9 @@ sealed class Route {
     data class TvShowDetailScreenRoute(@Serializable val tvShowId: Int) : Route()
 
     @Serializable
-    data object SearchRoute : Route()
+    data object SearchMovieRoute : Route()
+
+    @Serializable
+    data object SearchTvShowsRoute : Route()
 }
 

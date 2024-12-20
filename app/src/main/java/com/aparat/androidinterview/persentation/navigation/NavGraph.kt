@@ -6,9 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.aparat.androidinterview.persentation.home.HomeScreen
-import com.aparat.androidinterview.persentation.home.tabs.movies.detail.MovieDetailScreen
-import com.aparat.androidinterview.persentation.home.tabs.tvShows.detail.TvShowDetailScreen
-import com.aparat.androidinterview.persentation.search.SearchScreen
+import com.aparat.androidinterview.persentation.home.movies.detail.MovieDetailScreen
+import com.aparat.androidinterview.persentation.home.movies.search.SearchMovieScreen
+import com.aparat.androidinterview.persentation.home.tvShows.detail.TvShowDetailScreen
+import com.aparat.androidinterview.persentation.home.tvShows.search.SearchTvShowsScreen
 
 @Composable
 fun NavGraph(
@@ -28,8 +29,11 @@ fun NavGraph(
             val data = it.toRoute<Route.TvShowDetailScreenRoute>()
             TvShowDetailScreen(data.tvShowId)
         }
-        composable<Route.SearchRoute> {
-            SearchScreen(appNavController)
+        composable<Route.SearchMovieRoute> {
+            SearchMovieScreen(appNavController)
+        }
+        composable<Route.SearchTvShowsRoute> {
+            SearchTvShowsScreen(appNavController)
         }
     }
 }

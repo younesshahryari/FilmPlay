@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.persentation.search
+package com.aparat.androidinterview.persentation.home.movies.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
+class SearchMovieViewModel @Inject constructor(
     private val repository: MovieRepository
 ) : ViewModel() {
 
@@ -28,7 +28,7 @@ class SearchViewModel @Inject constructor(
     private var totalPages: Int = Int.MAX_VALUE
 
     private val _listItems = MutableStateFlow<List<MovieModel>>(listOf())
-    val listItems: StateFlow<List<MovieModel>> get() = _listItems
+    val listState: StateFlow<List<MovieModel>> get() = _listItems
 
     private val _searchQueryState = MutableStateFlow("")
     val searchQueryState: StateFlow<String> = _searchQueryState
@@ -37,7 +37,7 @@ class SearchViewModel @Inject constructor(
     val loadingState: StateFlow<Boolean> get() = _loadingState
 
     private val _noResultState = MutableStateFlow(false)
-    val noResultState: StateFlow<Boolean> get() = _noResultState
+    val noAnyContentState: StateFlow<Boolean> get() = _noResultState
 
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> get() = _errorState
@@ -78,7 +78,11 @@ class SearchViewModel @Inject constructor(
 
     fun updateSearchQuery(query: String) {
         _searchQueryState.value = query
-        initSearchByQueryJob()
+        if (!isQueryEmpty()) {
+            initSearchByQueryJob()
+        } else {
+            reset()
+        }
     }
 
     private fun initSearchByQueryJob() {
@@ -102,10 +106,10 @@ class SearchViewModel @Inject constructor(
     }
 
 
-    private fun handleData(data: ListModel<MovieModel>) {
-        totalPages = data.totalPages
-        lastSuccessPage = data.page
-        val combinedList = (_listItems.value + data.results).distinctBy { it.id }
+    private fun handleData(newData: ListModel<MovieModel>) {
+        totalPages = newData.totalPages
+        lastSuccessPage = newData.page
+        val combinedList = (_listItems.value + newData.results).distinctBy { it.id }
         setListData(combinedList)
         setNoResult(combinedList.isEmpty())
     }

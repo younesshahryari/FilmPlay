@@ -1,11 +1,11 @@
-package com.aparat.androidinterview.persentation.home.tabs.movies.detail
+package com.aparat.androidinterview.persentation.home.tvShows.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.retrofit.adapter.either.networkhandling.CallError
-import com.aparat.androidinterview.data.repository.movie.MovieRepository
+import com.aparat.androidinterview.data.repository.tvShow.TvShowRepository
 import com.aparat.androidinterview.persentation.extensions.toHumanReadableText
-import com.aparat.androidinterview.persentation.model.MovieModel
+import com.aparat.androidinterview.persentation.model.TvShowDetailModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +15,12 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieDetailViewModel @Inject constructor(
-    private val repository: MovieRepository,
+class TvShowDetailViewModel @Inject constructor(
+    private val repository: TvShowRepository
 ) : ViewModel() {
 
-    private val _dataState = MutableStateFlow<MovieModel?>(null)
-    val dataState: StateFlow<MovieModel?> get() = _dataState
+    private val _dataState = MutableStateFlow<TvShowDetailModel?>(null)
+    val dataState: StateFlow<TvShowDetailModel?> get() = _dataState
 
     private val _loadingState = MutableStateFlow(false)
     val loadingState: StateFlow<Boolean> get() = _loadingState
@@ -32,7 +32,7 @@ class MovieDetailViewModel @Inject constructor(
         setLoading(true)
         viewModelScope.launch {
             val response = withContext(Dispatchers.IO) {
-                repository.getMovie(id)
+                repository.getTvShow(id)
             }
             response.getOrNull()?.let {
                 setListData(it)
@@ -52,7 +52,7 @@ class MovieDetailViewModel @Inject constructor(
         fetchData(id)
     }
 
-    private fun setListData(data: MovieModel) {
+    private fun setListData(data: TvShowDetailModel) {
         _dataState.value = data
     }
 
@@ -64,9 +64,4 @@ class MovieDetailViewModel @Inject constructor(
         _errorState.value = errorText
     }
 
-
 }
-
-
-
-

@@ -15,9 +15,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.aparat.androidinterview.persentation.components.BottomNavigationBar
 import com.aparat.androidinterview.persentation.components.Toolbar
-import com.aparat.androidinterview.persentation.components.BottomNavItem
-import com.aparat.androidinterview.persentation.components.getBottomNavItemByRoute
-import com.aparat.androidinterview.persentation.home.navigation.BottomNavigationNavGraph
 import com.aparat.androidinterview.persentation.navigation.Route
 
 @Composable
@@ -27,13 +24,16 @@ fun HomeScreen(appNavController: NavHostController) {
     val currentTabNavItem = remember { mutableStateOf<BottomNavItem>(BottomNavItem.Movie) }
     val tabNavBackStackEntry by tabsNavController.currentBackStackEntryAsState()
     val currentTabsRoute = tabNavBackStackEntry?.destination?.route
-
     LaunchedEffect(currentTabsRoute) {
         currentTabNavItem.value = getBottomNavItemByRoute(currentTabsRoute)
     }
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         Toolbar(currentTabNavItem.value) {
-            appNavController.navigate(Route.SearchRoute)
+            if (currentTabNavItem.value == BottomNavItem.Movie) {
+                appNavController.navigate(Route.SearchMovieRoute)
+            } else {
+                appNavController.navigate(Route.SearchTvShowsRoute)
+            }
         }
     }, content = { paddingValue ->
         Box(modifier = Modifier.padding(paddingValue)) {
@@ -48,7 +48,7 @@ fun HomeScreen(appNavController: NavHostController) {
         }
     }, bottomBar = {
         BottomNavigationBar(currentTabsRoute) { item ->
-            tabsNavController.navigate(item){
+            tabsNavController.navigate(item) {
                 popUpTo(tabsNavController.graph.startDestinationId) {
                     saveState = true
                 }

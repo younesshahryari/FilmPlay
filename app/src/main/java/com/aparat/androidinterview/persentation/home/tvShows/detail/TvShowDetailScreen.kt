@@ -1,15 +1,19 @@
-package com.aparat.androidinterview.persentation.home.tabs.tvShows.detail
+package com.aparat.androidinterview.persentation.home.tvShows.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,15 +33,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.aparat.androidinterview.R
 import com.aparat.androidinterview.THUMBNAIL_BASE_URL
-import com.aparat.androidinterview.persentation.model.TvShowModel
+import com.aparat.androidinterview.persentation.model.TvShowDetailModel
 
 @Composable
 fun TvShowDetailScreen(itemId: Int) {
 
     val viewModel: TvShowDetailViewModel = hiltViewModel()
-    val data by viewModel.data.collectAsStateWithLifecycle()
-    val isLoading by viewModel.loading.collectAsStateWithLifecycle()
-    val isError by viewModel.error.collectAsStateWithLifecycle()
+    val data by viewModel.dataState.collectAsStateWithLifecycle()
+    val isLoading by viewModel.loadingState.collectAsStateWithLifecycle()
+    val error by viewModel.errorState.collectAsStateWithLifecycle()
+    val isError = !error.isNullOrEmpty()
 
     LaunchedEffect(Unit) { viewModel.fetchData(itemId) }
 
@@ -46,7 +51,7 @@ fun TvShowDetailScreen(itemId: Int) {
     }
 
     if (isError) {
-        ErrorUI { viewModel.retry(itemId) }
+        ErrorUI(error!!) { viewModel.retry(itemId) }
     }
 
     data?.let {
@@ -55,10 +60,12 @@ fun TvShowDetailScreen(itemId: Int) {
 }
 
 @Composable
-private fun DetailUI(item: TvShowModel) {
+private fun DetailUI(item: TvShowDetailModel) {
+    val scrollState = rememberScrollState()
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 40.dp, vertical = 20.dp),
         contentAlignment = Alignment.TopCenter
@@ -69,11 +76,11 @@ private fun DetailUI(item: TvShowModel) {
                 .padding(top = 16.dp)
         ) {
             AsyncImage(
-                model = THUMBNAIL_BASE_URL + item.thumbnail,
+                model = THUMBNAIL_BASE_URL + item.posterPath,
                 contentDescription = "Description of the image",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1.0f, fill = false)
+                    .heightIn(250.dp)
                     .padding(bottom = 12.dp)
                     .clip(RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Crop,
@@ -93,7 +100,7 @@ private fun DetailUI(item: TvShowModel) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = item.title,
+                    text = item.name,
                     maxLines = 2,
                     minLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -103,7 +110,7 @@ private fun DetailUI(item: TvShowModel) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = item.date,
+                    text = item.firstAirDate,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.labelSmall,
                 )
@@ -113,7 +120,7 @@ private fun DetailUI(item: TvShowModel) {
                     .fillMaxWidth()
                     .padding(vertical = 48.dp)
                     .wrapContentHeight(),
-                text = item.title,
+                text = item.type,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineLarge,
@@ -158,7 +165,7 @@ private fun LoadingUI() {
 }
 
 @Composable
-private fun ErrorUI(retryCallback: () -> Unit) {
+private fun ErrorUI(errorText: String, retryCallback: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -169,7 +176,7 @@ private fun ErrorUI(retryCallback: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { retryCallback.invoke() },
-            text = "Error!, Tap to retry!",
+            text = errorText,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onBackground,
         )

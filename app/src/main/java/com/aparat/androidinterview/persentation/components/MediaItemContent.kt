@@ -16,10 +16,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aparat.androidinterview.R
 import com.aparat.androidinterview.THUMBNAIL_BASE_URL
-import com.aparat.androidinterview.persentation.model.TvShowModel
+import com.aparat.androidinterview.persentation.model.MediaModel
 
 @Composable
-fun TvShowItem(item: TvShowModel, onItemClicked: (TvShowModel) -> Unit) {
+fun <T : MediaModel> MediaItemContent(item: T, onItemClicked: (T) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.persentation.home.tabs.movies
+package com.aparat.androidinterview.persentation.home.movies
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,7 +32,7 @@ class MoviesViewModel @Inject constructor(
     val loadingState: StateFlow<Boolean> get() = _loadingState
 
     private val _noResultState = MutableStateFlow(false)
-    val noResultState: StateFlow<Boolean> get() = _noResultState
+    val noAnyContentState: StateFlow<Boolean> get() = _noResultState
 
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> get() = _errorState

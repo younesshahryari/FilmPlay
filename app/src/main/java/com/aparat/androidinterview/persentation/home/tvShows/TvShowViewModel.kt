@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.persentation.home.tabs.tvShows
+package com.aparat.androidinterview.persentation.home.tvShows
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,14 +25,14 @@ class TvShowViewModel @Inject constructor(
     private var lastSuccessPage: Int = 0
     private var totalPages: Int = Int.MAX_VALUE
 
-    private val _listItems = MutableStateFlow<List<TvShowModel>>(listOf())
-    val listItems: StateFlow<List<TvShowModel>> get() = _listItems
+    private val _listState = MutableStateFlow<List<TvShowModel>>(listOf())
+    val listState: StateFlow<List<TvShowModel>> get() = _listState
 
     private val _loadingState = MutableStateFlow(false)
     val loadingState: StateFlow<Boolean> get() = _loadingState
 
     private val _noResultState = MutableStateFlow(false)
-    val noResultState: StateFlow<Boolean> get() = _noResultState
+    val noAnyContentState: StateFlow<Boolean> get() = _noResultState
 
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> get() = _errorState
@@ -68,10 +68,10 @@ class TvShowViewModel @Inject constructor(
         fetchData()
     }
 
-    private fun handleData(data: ListModel<TvShowModel>) {
-        totalPages = data.totalPages
-        lastSuccessPage = data.page
-        val combinedList = (_listItems.value + data.results).distinctBy { it.id }
+    private fun handleData(newResult: ListModel<TvShowModel>) {
+        totalPages = newResult.totalPages
+        lastSuccessPage = newResult.page
+        val combinedList = (_listState.value + newResult.results).distinctBy { it.id }
         setListData(combinedList)
         setNoResult(combinedList.isEmpty())
     }
@@ -93,7 +93,7 @@ class TvShowViewModel @Inject constructor(
     }
 
     private fun setListData(list: List<TvShowModel>) {
-        _listItems.value = list
+        _listState.value = list
     }
 
     private fun isLoading(): Boolean {

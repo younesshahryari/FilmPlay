@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.retrofit.adapter.either.networkhandling.CallError
 import com.aparat.androidinterview.PAGE
 import com.aparat.androidinterview.QUERY
+import com.aparat.androidinterview.data.remoteData.model.MovieDetailResponse
 import com.aparat.androidinterview.data.remoteData.model.MovieResponse
 import com.aparat.androidinterview.data.remoteData.model.ResponseList
 import retrofit2.http.GET
@@ -15,7 +16,7 @@ interface MovieApi {
     @GET("movie/{movie_id}")
     suspend fun getMovie(
         @Path("movie_id") movieId: Int
-    ): Either<CallError, MovieResponse>
+    ): Either<CallError, MovieDetailResponse>
 
     @GET("movie/popular")
     suspend fun getPopularMovies(

@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = false)
-data class Genre(
+data class GenreResponse(
     @Json(name = "id") val id: Int,
     @Json(name = "name") val name: String
 )

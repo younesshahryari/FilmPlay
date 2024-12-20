@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.persentation.home.tabs.movies.detail
+package com.aparat.androidinterview.persentation.home.movies.detail
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,8 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.aparat.androidinterview.POSTER_BASE_URL
 import com.aparat.androidinterview.R
 import com.aparat.androidinterview.THUMBNAIL_BASE_URL
+import com.aparat.androidinterview.persentation.model.MovieDetailModel
 import com.aparat.androidinterview.persentation.model.MovieModel
 
 @Composable
@@ -58,9 +60,9 @@ fun MovieDetailScreen(itemId: Int) {
 }
 
 @Composable
-private fun ShowDetail(item: MovieModel) {
+private fun ShowDetail(item: MovieDetailModel) {
     AsyncImage(
-        model = THUMBNAIL_BASE_URL + item.thumbnail,
+        model = POSTER_BASE_URL + item.posterPath,
         contentDescription = "Description of the image",
         modifier = Modifier
             .fillMaxWidth()
@@ -85,7 +87,7 @@ private fun ShowDetail(item: MovieModel) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp, start = 8.dp, end = 8.dp),
-        text = item.date,
+        text = item.releaseDate,
         color = MaterialTheme.colorScheme.onSurface,
         style = MaterialTheme.typography.labelSmall,
     )

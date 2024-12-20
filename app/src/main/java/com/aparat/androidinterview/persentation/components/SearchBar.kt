@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SearchBar(
     query: String,
+    hintPlaceHolder: String,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit
 ) {
@@ -27,7 +28,7 @@ fun SearchBar(
     TextField(
         value = query,
         onValueChange = onQueryChange,
-        placeholder = { Text("Search...") },
+        placeholder = { Text(hintPlaceHolder) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),

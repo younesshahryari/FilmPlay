@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.persentation.components
+package com.aparat.androidinterview.persentation.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -10,7 +10,6 @@ sealed class BottomNavItem(
     val tabName: String,
     val icon: ImageVector,
     val toolbarTitle: String,
-    val hasToolbarSearch: Boolean,
     val route: String = tabName,
 ) {
     @Immutable
@@ -19,7 +18,6 @@ sealed class BottomNavItem(
             tabName = "Movies",
             icon = Icons.Default.Home,
             toolbarTitle = "Popular Movies",
-            hasToolbarSearch = true
         )
 
     @Immutable
@@ -28,7 +26,6 @@ sealed class BottomNavItem(
             tabName = "Shows",
             icon = Icons.Default.PlayArrow,
             toolbarTitle = "Popular TvShows",
-            hasToolbarSearch = false
         )
 
 }

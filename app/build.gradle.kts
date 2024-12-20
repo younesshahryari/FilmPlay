@@ -55,6 +55,7 @@ android {
 dependencies {
     implementation(libs.material)
     with(libs) {
+        implementation(libs.androidx.splashscreen)
         implementation(androidx.ui)
         implementation(androidx.core.ktx)
         implementation(androidx.material3)
