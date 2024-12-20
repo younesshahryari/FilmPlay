@@ -56,7 +56,7 @@ fun <T : MediaModel> LazyLoadMediaGridList(
                     if (isLoading) {
                         LoadingContent()
                     } else if (isError) {
-                        ErrorContent(errorText!!, onRetryClicked)
+                        ErrorContent(error = errorText!!, onRetryClicked =  onRetryClicked)
                     } else {
                         NoAnyContent()
                     }

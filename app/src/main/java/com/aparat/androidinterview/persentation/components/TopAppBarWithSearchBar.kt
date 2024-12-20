@@ -48,7 +48,6 @@ fun TopAppBarWithSearchBar(
             .wrapContentHeight(),
         title = {
             TextField(
-                shape = RoundedCornerShape(100),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
@@ -59,6 +58,9 @@ fun TopAppBarWithSearchBar(
                 placeholder = { Text(hintPlaceHolder) },
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
+                    cursorColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedContainerColor = MaterialTheme.colorScheme.primary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.primary,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 ),

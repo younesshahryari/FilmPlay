@@ -23,11 +23,11 @@ fun NavGraph(
 
         composable<Route.MovieDetailScreenRoute> {
             val data = it.toRoute<Route.MovieDetailScreenRoute>()
-            MovieDetailScreen(data.movieId)
+            MovieDetailScreen(appNavController, data.movieId)
         }
         composable<Route.TvShowDetailScreenRoute> {
             val data = it.toRoute<Route.TvShowDetailScreenRoute>()
-            TvShowDetailScreen(data.tvShowId)
+            TvShowDetailScreen(appNavController, data.tvShowId)
         }
         composable<Route.SearchMovieRoute> {
             SearchMovieScreen(appNavController)

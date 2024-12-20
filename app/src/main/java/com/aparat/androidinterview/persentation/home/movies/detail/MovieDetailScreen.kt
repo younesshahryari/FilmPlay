@@ -1,31 +1,42 @@
 package com.aparat.androidinterview.persentation.home.movies.detail
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.aparat.androidinterview.POSTER_BASE_URL
 import com.aparat.androidinterview.R
 import com.aparat.androidinterview.THUMBNAIL_BASE_URL
+import com.aparat.androidinterview.persentation.components.Chips
+import com.aparat.androidinterview.persentation.components.ErrorContent
+import com.aparat.androidinterview.persentation.components.LoadingContent
+import com.aparat.androidinterview.persentation.components.Toolbar
+import com.aparat.androidinterview.persentation.components.WatchNowButton
 import com.aparat.androidinterview.persentation.model.MovieDetailModel
-import com.aparat.androidinterview.persentation.model.MovieModel
 
 @Composable
-fun MovieDetailScreen(itemId: Int) {
+fun MovieDetailScreen(navController: NavHostController, itemId: Int) {
     val viewModel: MovieDetailViewModel = hiltViewModel()
     val data by viewModel.dataState.collectAsStateWithLifecycle()
     val isLoading by viewModel.loadingState.collectAsStateWithLifecycle()
@@ -34,62 +45,111 @@ fun MovieDetailScreen(itemId: Int) {
 
     LaunchedEffect(Unit) { viewModel.fetchData(itemId) }
 
-    if (isLoading) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Loading...",
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-    }
-    if (isError) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { viewModel.retry(itemId) },
-            text = error!!,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-    }
+    val scrollState = rememberScrollState()
 
-    data?.let {
-        ShowDetail(it)
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+        Toolbar(data?.title ?: "Movie", onBackPressClicked = {
+            navController.popBackStack()
+        })
+    }) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(paddingValues),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            if (isLoading) {
+                LoadingContent(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(30.dp)
+                )
+            } else if (isError) {
+                ErrorContent(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    error = error!!
+                ) { viewModel.retry(itemId) }
+            } else {
+                data?.let {
+                    DetailContent(it)
+                }
+            }
+        }
     }
 
 }
 
 @Composable
-private fun ShowDetail(item: MovieDetailModel) {
-    AsyncImage(
-        model = POSTER_BASE_URL + item.posterPath,
-        contentDescription = "Description of the image",
+private fun DetailContent(item: MovieDetailModel) {
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 48.dp)
-            .height(200.dp),
-        contentScale = ContentScale.Crop,
-        placeholder = painterResource(R.drawable.ic_holder),
-        error = painterResource(R.drawable.ic_holder)
-    )
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 12.dp, top = 8.dp, start = 8.dp, end = 8.dp),
-        text = item.title,
-        maxLines = 2,
-        minLines = 2,
-        overflow = TextOverflow.Ellipsis,
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.onSurface,
-    )
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp),
-        text = item.releaseDate,
-        color = MaterialTheme.colorScheme.onSurface,
-        style = MaterialTheme.typography.labelSmall,
-    )
+            .padding(bottom = 60.dp)
+    ) {
+        AsyncImage(
+            model = THUMBNAIL_BASE_URL + item.posterPath,
+            contentDescription = "Description of the image",
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
+            placeholder = painterResource(R.drawable.ic_holder),
+            error = painterResource(R.drawable.ic_holder)
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+        ) {
+            WatchNowButton(
+                Modifier
+                    .padding(vertical = 10.dp)
+                    .fillMaxWidth()
+            ) {
+
+            }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                text = item.title,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            item.overview?.let {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                text = item.releaseDate,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            val genres = item.genreResponses?.joinToString(", ") { it.name } ?: "No Genres"
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                text = "Genre(s): $genres",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+
+            Chips("Rating ${item.voteAverage} (${item.voteCount})", Icons.Default.Star)
+        }
+    }
 }
 

@@ -1,42 +1,50 @@
 package com.aparat.androidinterview.persentation.home.tvShows.detail
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.aparat.androidinterview.R
 import com.aparat.androidinterview.THUMBNAIL_BASE_URL
+import com.aparat.androidinterview.persentation.components.Chips
+import com.aparat.androidinterview.persentation.components.ErrorContent
+import com.aparat.androidinterview.persentation.components.LoadingContent
+import com.aparat.androidinterview.persentation.components.SeasonItemContent
+import com.aparat.androidinterview.persentation.components.Toolbar
+import com.aparat.androidinterview.persentation.components.WatchNowButton
+import com.aparat.androidinterview.persentation.model.SeasonModel
 import com.aparat.androidinterview.persentation.model.TvShowDetailModel
 
 @Composable
-fun TvShowDetailScreen(itemId: Int) {
+fun TvShowDetailScreen(navController: NavHostController, itemId: Int) {
 
     val viewModel: TvShowDetailViewModel = hiltViewModel()
     val data by viewModel.dataState.collectAsStateWithLifecycle()
@@ -46,141 +54,137 @@ fun TvShowDetailScreen(itemId: Int) {
 
     LaunchedEffect(Unit) { viewModel.fetchData(itemId) }
 
-    if (isLoading) {
-        LoadingUI()
+    val scrollState = rememberScrollState()
+
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+        Toolbar(data?.name ?: "TvShow", onBackPressClicked = {
+            navController.popBackStack()
+        })
+    }) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(paddingValues),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            if (isLoading) {
+                LoadingContent(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(30.dp)
+                )
+            } else if (isError) {
+                ErrorContent(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    error = error!!
+                ) { viewModel.retry(itemId) }
+            } else {
+                data?.let {
+                    DetailContent(it)
+                }
+            }
+        }
     }
 
-    if (isError) {
-        ErrorUI(error!!) { viewModel.retry(itemId) }
-    }
-
-    data?.let {
-        DetailUI(it)
-    }
 }
 
 @Composable
-private fun DetailUI(item: TvShowDetailModel) {
-    val scrollState = rememberScrollState()
-    Box(
+private fun DetailContent(item: TvShowDetailModel) {
+
+    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 40.dp, vertical = 20.dp),
-        contentAlignment = Alignment.TopCenter
+            .fillMaxWidth()
+            .padding(bottom = 60.dp)
     ) {
+        AsyncImage(
+            model = THUMBNAIL_BASE_URL + item.posterPath,
+            contentDescription = "Description of the image",
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
+            placeholder = painterResource(R.drawable.ic_holder),
+            error = painterResource(R.drawable.ic_holder)
+        )
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 16.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
         ) {
-            AsyncImage(
-                model = THUMBNAIL_BASE_URL + item.posterPath,
-                contentDescription = "Description of the image",
-                modifier = Modifier
+            WatchNowButton(
+                Modifier
+                    .padding(vertical = 10.dp)
                     .fillMaxWidth()
-                    .heightIn(250.dp)
-                    .padding(bottom = 12.dp)
-                    .clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.ic_holder),
-                error = painterResource(R.drawable.ic_holder)
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .clip(RoundedCornerShape(8.dp))
-                    .align(Alignment.CenterHorizontally)
-                    .background(MaterialTheme.colorScheme.inversePrimary)
-                    .padding(8.dp)
             ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = item.name,
-                    maxLines = 2,
-                    minLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = item.firstAirDate,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.labelSmall,
-                )
+
             }
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 48.dp)
-                    .wrapContentHeight(),
-                text = item.type,
+                    .padding(bottom = 8.dp),
+                text = item.name,
                 overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onSurface,
             )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                text = item.overview,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                text = item.firstAirDate,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            val genres = item.genreResponses?.joinToString(", ") { it.name } ?: "No Genres"
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                text = "Genre(s): $genres",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+
+            Row {
+                Chips("Rating ${item.voteAverage} (${item.voteCount})", Icons.Default.Star)
+                Spacer(modifier = Modifier.width(8.dp))
+                Chips("${item.numberOfEpisodes} Episode(s)")
+            }
         }
-        RatingUi(item.voteAverage)
-    }
-}
 
-
-@Composable
-private fun RatingUi(voteAverage: Float) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .padding(vertical = 4.dp, horizontal = 12.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Rating $voteAverage",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
+        val seasons = (item.seasonModels ?: emptyList())
+        if (seasons.isNotEmpty()) {
+            SeasonList(seasons.size, seasons)
+        }
     }
 }
 
 @Composable
-private fun LoadingUI() {
-    Box(
+private fun SeasonList(seasonCount: Int, list: List<SeasonModel>) {
+    Text(
         modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center
+            .fillMaxWidth()
+            .padding(top = 20.dp, bottom = 10.dp, start = 20.dp, end = 20.dp),
+        text = "$seasonCount Season(s)",
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onSurface,
+    )
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 20.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .size(40.dp)
-                .align(Alignment.Center)
-        )
+        items(list, key = { item -> item.id }) { item ->
+            SeasonItemContent(item)
+        }
     }
 }
-
-@Composable
-private fun ErrorUI(errorText: String, retryCallback: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { retryCallback.invoke() },
-            text = errorText,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-    }
-}
-
 

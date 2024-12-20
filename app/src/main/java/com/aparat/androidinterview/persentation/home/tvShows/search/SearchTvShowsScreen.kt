@@ -72,7 +72,7 @@ fun SearchTvShowsScreen(navController: NavHostController) {
                 viewModel.retry()
             },
             onItemClicked = {
-                navController.navigate(Route.MovieDetailScreenRoute(it.id))
+                navController.navigate(Route.TvShowDetailScreenRoute(it.id))
             }
         )
     }

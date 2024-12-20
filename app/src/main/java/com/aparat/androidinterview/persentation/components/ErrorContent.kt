@@ -11,10 +11,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ErrorContent(error: String, onRetryClicked: () -> Unit) {
+fun ErrorContent(
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    error: String,
+    onRetryClicked: () -> Unit
+) {
     Text(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .clickable { onRetryClicked.invoke() },
         text = error,
         textAlign = TextAlign.Center
