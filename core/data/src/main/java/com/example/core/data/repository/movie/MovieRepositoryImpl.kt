@@ -20,6 +20,7 @@ class MovieRepositoryImpl @Inject constructor(private val movieRemoteDataSource:
         return try {
             Result.success(movieRemoteDataSource.getMovie(movieId).asExternalModel())
         } catch (e: Exception) {
+            println(e)
             Result.failure(e)
         }
     }

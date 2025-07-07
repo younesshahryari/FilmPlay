@@ -23,6 +23,7 @@ class PopularMoviePagingSource @Inject constructor(
                 nextKey = if (movies.isEmpty() || position == response.totalPages) null else response.page + 1
             )
         } catch (exception: Exception) {
+            println(exception)
             LoadResult.Error(exception)
         }
     }
@@ -35,6 +36,6 @@ class PopularMoviePagingSource @Inject constructor(
     }
 
     private companion object {
-        const val START_PAGE_NUMBER = 0
+        const val START_PAGE_NUMBER = 1
     }
 }

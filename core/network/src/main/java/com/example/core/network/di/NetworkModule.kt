@@ -21,7 +21,10 @@ import io.ktor.client.HttpClient
 object NetworkModule {
 
     @Provides
-    fun provideKtorClientBuilder(): HttpClient = AndroidBaseKtorClientBuilder().buildKtorClient()
+    fun provideKtorClientBuilder(): KtorClientBuilder = AndroidBaseKtorClientBuilder()
+
+    @Provides
+    fun provideKtorClient(ktorClientBuilder: KtorClientBuilder): HttpClient = ktorClientBuilder.buildKtorClient()
 
     @Provides
     fun provideMovieApi(client: HttpClient): MovieApi = MovieApiImpl(client)

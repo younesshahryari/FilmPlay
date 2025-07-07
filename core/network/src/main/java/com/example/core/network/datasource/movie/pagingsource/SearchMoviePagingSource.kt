@@ -34,6 +34,6 @@ class SearchMoviePagingSource @Inject constructor(
     }
 
     private companion object {
-        const val START_PAGE_NUMBER = 0
+        const val START_PAGE_NUMBER = 1
     }
 }

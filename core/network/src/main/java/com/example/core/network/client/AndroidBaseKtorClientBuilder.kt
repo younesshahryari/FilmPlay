@@ -1,5 +1,6 @@
 package com.example.core.network.client
 
+import com.example.core.network.BuildConfig
 import com.example.core.network.util.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -32,11 +33,12 @@ open class AndroidBaseKtorClientBuilder : KtorClientBuilder {
                 connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             }
+
         }
+        installLogging()
         installDefaultRequestHeaders()
         installContentNegotiation()
         installAuth()
-        installLogging()
     }
 
     private fun HttpClientConfig<*>.installDefaultRequestHeaders() {
@@ -48,7 +50,7 @@ open class AndroidBaseKtorClientBuilder : KtorClientBuilder {
     private fun HttpClientConfig<*>.installAuth() {
         install(Auth) {
             bearer {
-                val token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkN2Y4YzVjMTMyZGRhNTYzYmU5ZTgyOTczNGNjNjMyMyIsIm5iZiI6MTczNDE2NzM2Mi41NzIsInN1YiI6IjY3NWQ0YjQyOTA0NmY3M2YzYWYxYTE4NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.U9ElcjQgkdiO8-AQOeqeNZ2Z8D6w0bh1zl7eVwupOr0"
+                val token = BuildConfig.API_TOKEN
                 val bearerTokens = BearerTokens(token, token)
                 loadTokens { bearerTokens }
                 refreshTokens { bearerTokens }
@@ -71,7 +73,8 @@ open class AndroidBaseKtorClientBuilder : KtorClientBuilder {
             level = LogLevel.ALL
             logger = object : KtorLogger {
                 override fun log(message: String) {
-                    Logger.i(TAG, message)
+                    println("$TAG: $message")
+                   // Logger.i(TAG, message)
                 }
             }
         }
