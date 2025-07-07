@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.persentation.components
+package com.example.core.ui.components
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator

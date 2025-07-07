@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.persentation.components
+package com.example.core.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -14,19 +14,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.aparat.androidinterview.R
-import com.aparat.androidinterview.THUMBNAIL_BASE_URL
 import com.example.core.model.MediaModel
+import com.example.core.ui.R
 
 @Composable
-fun <T : com.example.core.model.MediaModel> MediaItemContent(item: T, onItemClicked: (T) -> Unit) {
+fun <T : MediaModel> MediaItemContent(item: T, onItemClicked: (T) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onItemClicked.invoke(item) }
     ) {
         AsyncImage(
-            model = THUMBNAIL_BASE_URL + item.thumbnail,
+            model =  item.thumbnail,
             contentDescription = "Description of the image",
             modifier = Modifier
                 .fillMaxWidth()

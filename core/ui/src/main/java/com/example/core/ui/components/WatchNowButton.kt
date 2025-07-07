@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.persentation.components
+package com.example.core.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.aparat.androidinterview.R
+import com.example.core.ui.R
 
 @Composable
 fun WatchNowButton(modifier: Modifier, onClick: () -> Unit) {

@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.core.model.MovieModel
+import com.example.core.ui.components.MediaItemContent
 
 @Composable
 fun MoviesScreen(movieClicked: (MovieModel) -> Unit) {
@@ -33,7 +34,7 @@ fun MoviesScreen(movieClicked: (MovieModel) -> Unit) {
             items(movies.itemCount) { index ->
                 val movie = movies[index]
                 if (movie != null) {
-                    //  MovieItem(movie = movie)
+                    MediaItemContent(movie, {})
                 }
             }
 

@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.persentation.components
+package com.example.core.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,19 +14,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.aparat.androidinterview.R
-import com.aparat.androidinterview.THUMBNAIL_BASE_URL
 import com.example.core.model.SeasonModel
+import com.example.core.ui.R
 
 @Composable
-fun SeasonItemContent(item: com.example.core.model.SeasonModel) {
+fun SeasonItemContent(item: SeasonModel) {
     Column(
         modifier = Modifier
             .padding(horizontal = 2.dp)
             .fillMaxWidth()
     ) {
         AsyncImage(
-            model = THUMBNAIL_BASE_URL + item.posterPath,
+            model = item.posterPath,
             contentDescription = "Description of the image",
             modifier = Modifier
                 .width(100.dp)

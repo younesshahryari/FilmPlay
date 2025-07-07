@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.aparat.androidinterview.ui.persentation.components.BottomNavigationBar
-import com.aparat.androidinterview.ui.persentation.components.Toolbar
 import com.aparat.androidinterview.ui.persentation.navigation.Route
+import com.aparat.androidinterview.ui.components.BottomNavigationBar
+import com.example.core.ui.components.Toolbar
 
 @Composable
 fun HomeScreen(appNavController: NavHostController) {
@@ -28,13 +28,15 @@ fun HomeScreen(appNavController: NavHostController) {
         currentTabNavItem.value = getBottomNavItemByRoute(currentTabsRoute)
     }
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Toolbar(title = currentTabNavItem.value.toolbarTitle, onSearchClicked = {
-            if (currentTabNavItem.value == BottomNavItem.Movie) {
-                appNavController.navigate(Route.SearchMovieRoute)
-            } else {
-                appNavController.navigate(Route.SearchTvShowsRoute)
-            }
-        })
+        Toolbar(
+            title = currentTabNavItem.value.toolbarTitle,
+            onSearchClicked = {
+                if (currentTabNavItem.value == BottomNavItem.Movie) {
+                    appNavController.navigate(Route.SearchMovieRoute)
+                } else {
+                    appNavController.navigate(Route.SearchTvShowsRoute)
+                }
+            })
     }, content = { paddingValue ->
         Box(modifier = Modifier.padding(paddingValue)) {
             BottomNavigationNavGraph(movieClicked = { item ->

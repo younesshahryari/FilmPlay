@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.persentation.components
+package com.example.core.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,14 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.aparat.androidinterview.LIST_GRID_COUNT
 import com.example.core.model.MediaModel
 
 @Composable
-fun <T : com.example.core.model.MediaModel> LazyLoadMediaGridList(
+fun <T : MediaModel> LazyLoadMediaGridList(
     modifier: Modifier,
     lazyGridState: LazyGridState,
-    gridCount: Int = LIST_GRID_COUNT,
+    gridCount: Int = 2,
     list: List<T>,
     isLoading: Boolean,
     errorText: String?,

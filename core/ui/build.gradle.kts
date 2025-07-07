@@ -2,12 +2,10 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
-    namespace = "com.example.feature.tvshow"
+    namespace = "com.example.core.ui"
     compileSdk = 34
 
     defaultConfig {
@@ -39,35 +37,20 @@ android {
     buildFeatures {
         compose = true
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/**"
-        }
-    }
 }
 
 dependencies {
-    implementation(projects.core.ui)
-    implementation(projects.core.data)
+    implementation(projects.core.model)
     with(libs) {
-        implementation(hilt.compose)
-        implementation(hilt.android)
-        kapt(hilt.compiler)
-        implementation(androidx.core.ktx)
-        implementation(androidx.material3)
-        implementation(compose.navigation)
-        implementation(androidx.ui.graphics)
-        implementation(androidx.activity.compose)
-        implementation(androidx.ui.tooling.preview)
-        implementation(androidx.lifecycle.runtime.ktx)
-        implementation(accompanist.systemuicontroller)
         implementation(platform(androidx.compose.bom))
-        implementation(androidx.paging.runtime.ktx)
+        implementation(coil)
         implementation(androidx.core.ktx)
         implementation(androidx.appcompat)
+        implementation(androidx.material3)
         implementation(material)
         testImplementation(junit)
         androidTestImplementation(androidx.junit)
         androidTestImplementation(androidx.espresso.core)
     }
+
 }
