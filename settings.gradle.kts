@@ -20,4 +20,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "AparatAndroidInterview"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
+include(":core:data")
+include(":core:model")
+include(":core:network")
+include(":feature:movie")
+include(":feature:tvshow")

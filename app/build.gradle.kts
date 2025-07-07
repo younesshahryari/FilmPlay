@@ -47,15 +47,21 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+             excludes += "/META-INF/**"
         }
     }
 }
 
 dependencies {
-    implementation(libs.material)
+
+    implementation(projects.core.data)
+    implementation(projects.core.model)
+    implementation(projects.feature.movie)
+    implementation(projects.feature.tvshow)
+
     with(libs) {
-        implementation(libs.androidx.splashscreen)
+        implementation(material)
+        implementation(androidx.splashscreen)
         implementation(androidx.ui)
         implementation(androidx.core.ktx)
         implementation(androidx.material3)
@@ -64,20 +70,17 @@ dependencies {
         implementation(androidx.activity.compose)
         implementation(androidx.ui.tooling.preview)
         implementation(androidx.lifecycle.runtime.ktx)
-        implementation(libs.accompanist.systemuicontroller)
-        implementation(platform(libs.androidx.compose.bom))
+        implementation(accompanist.systemuicontroller)
+        implementation(platform(androidx.compose.bom))
 
         kapt(hilt.compiler)
         implementation(coil)
-        implementation(moshi)
         implementation(timber)
         implementation(hilt.compose)
         implementation(hilt.android)
         implementation(bundles.arrow)
-        implementation(bundles.okhttp)
-        implementation(bundles.retrofit)
         implementation(kotlin.immutable)
-        implementation(libs.kotlinx.serialization.json)
+        implementation(kotlinx.serialization.json)
 
         debugImplementation(androidx.ui.tooling)
         debugImplementation(androidx.ui.test.manifest)
@@ -86,7 +89,7 @@ dependencies {
         androidTestImplementation(androidx.junit)
         androidTestImplementation(androidx.espresso.core)
         androidTestImplementation(androidx.ui.test.junit4)
-        androidTestImplementation(platform(libs.androidx.compose.bom))
+        androidTestImplementation(platform(androidx.compose.bom))
     }
 
 }
