@@ -58,6 +58,7 @@ dependencies {
         kapt(hilt.compiler)
         implementation(androidx.paging.runtime.ktx)
         implementation(androidx.paging.compose)
+        implementation(coil)
         implementation(androidx.core.ktx)
         implementation(androidx.material3)
         implementation(compose.navigation)

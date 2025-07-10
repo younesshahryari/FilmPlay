@@ -8,10 +8,16 @@ sealed class Route {
     data object HomeRoute : Route()
 
     @Serializable
-    data class MovieDetailScreenRoute(@Serializable val movieId: Int) : Route()
+    data class MovieDetailScreenRoute(
+        @Serializable val movieId: Int,
+        @Serializable val title: String
+    ) : Route()
 
     @Serializable
-    data class TvShowDetailScreenRoute(@Serializable val tvShowId: Int) : Route()
+    data class TvShowDetailScreenRoute(
+        @Serializable val tvShowId: Int,
+        @Serializable val title: String
+    ) : Route()
 
     @Serializable
     data object SearchMovieRoute : Route()

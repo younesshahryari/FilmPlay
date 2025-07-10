@@ -23,17 +23,30 @@ fun NavGraph(
 
         composable<Route.MovieDetailScreenRoute> {
             val data = it.toRoute<Route.MovieDetailScreenRoute>()
-            MovieDetailScreen(appNavController, data.movieId)
+            MovieDetailScreen(
+                title = data.title,
+                onBackPressed = { appNavController.popBackStack() }
+            )
         }
         composable<Route.TvShowDetailScreenRoute> {
             val data = it.toRoute<Route.TvShowDetailScreenRoute>()
-            TvShowDetailScreen(appNavController, data.tvShowId)
+            TvShowDetailScreen(
+                title = data.title,
+                onBackPressed = { appNavController.popBackStack() })
         }
         composable<Route.SearchMovieRoute> {
-            SearchMovieScreen(appNavController)
+            SearchMovieScreen(
+                onItemClicked = {
+                    appNavController.navigate(Route.MovieDetailScreenRoute(it.id, it.title))
+                },
+                onBackPressed = { appNavController.popBackStack() })
         }
         composable<Route.SearchTvShowsRoute> {
-            SearchTvShowsScreen(appNavController)
+            SearchTvShowsScreen(
+                onItemClicked = {
+                    appNavController.navigate(Route.TvShowDetailScreenRoute(it.id, it.title))
+                },
+                onBackPressed = { appNavController.popBackStack() })
         }
     }
 }

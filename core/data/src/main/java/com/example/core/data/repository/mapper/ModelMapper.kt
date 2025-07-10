@@ -1,5 +1,7 @@
 package com.example.core.data.repository.mapper
 
+import com.example.core.data.POSTER_BASE_URL
+import com.example.core.data.THUMBNAIL_BASE_URL
 import com.example.core.model.EpisodeModel
 import com.example.core.model.GenreModel
 import com.example.core.model.ListModel
@@ -23,7 +25,7 @@ fun MovieResponse.asExternalModel(): MovieModel {
         title = title,
         date = date,
         genres = genres,
-        thumbnail = thumbnail,
+        thumbnail = THUMBNAIL_BASE_URL + thumbnail,
         voteAverage = voteAverage
     )
 }
@@ -35,7 +37,7 @@ fun MovieDetailResponse.asExternalModel(): MovieDetailModel {
         backdropPath = backdropPath,
         genreResponses = genreResponses?.map { it.asExternalModel() },
         overview = overview,
-        posterPath = posterPath,
+        posterPath = POSTER_BASE_URL + posterPath,
         releaseDate = releaseDate,
         status = status,
         title = title,
@@ -59,7 +61,7 @@ fun TvShowResponse.asExternalModel(): TvShowModel {
         title = title,
         date = date,
         genres = genres,
-        thumbnail = thumbnail,
+        thumbnail = THUMBNAIL_BASE_URL + thumbnail,
         voteAverage = voteAverage
     )
 }
@@ -84,7 +86,7 @@ fun TvShowDetailResponse.asExternalModel(): TvShowDetailModel {
         originalName = originalName,
         overview = overview,
         popularity = popularity,
-        posterPath = posterPath,
+        posterPath = POSTER_BASE_URL + posterPath,
         seasonModels = seasonResponses?.map { it.asExternalModel() },
         status = status,
         tagline = tagline,
@@ -126,7 +128,7 @@ fun SeasonResponse.asExternalModel(): SeasonModel {
         airDate = airDate,
         episodeCount = episodeCount,
         overview = overview,
-        posterPath = posterPath,
+        posterPath = POSTER_BASE_URL + posterPath,
         seasonNumber = seasonNumber,
         voteAverage = voteAverage
     )

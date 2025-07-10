@@ -2,80 +2,56 @@ package com.example.movie.search
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.core.model.MovieModel
+import com.example.core.ui.components.LazyLoadVerticalGridList
+import com.example.core.ui.components.TopAppBarWithSearchBar
 
 @Composable
-fun SearchMovieScreen(navController: NavHostController) {
+fun SearchMovieScreen(onItemClicked: (MovieModel) -> Unit, onBackPressed: () -> Unit) {
 
-  /*  val viewModel: SearchMovieViewModel = hiltViewModel()
-    val searchQuery by viewModel.searchQueryState.collectAsStateWithLifecycle()
-    val list by viewModel.listState.collectAsStateWithLifecycle()
-    val isLoading by viewModel.loadingState.collectAsStateWithLifecycle()
-    val isNoAnyContent by viewModel.noAnyContentState.collectAsStateWithLifecycle()
-    val error by viewModel.errorState.collectAsStateWithLifecycle()
+    val viewModel: SearchMovieViewModel = hiltViewModel()
+    val searchQuery by viewModel.currentSearchQuery.collectAsStateWithLifecycle(initialValue = "")
+    val items = viewModel.items.collectAsLazyPagingItems()
 
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val lazyGridState = rememberLazyGridState()
-    LaunchedEffect(lazyGridState) {
-        snapshotFlow {
-            lazyGridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-        }.collect { lastVisibleIndex ->
-            val countToRequest = list.size - 1 - LAZY_LOADING_ITEM_THRESHOLD
-            if (lastVisibleIndex >= countToRequest && !isLoading) {
-                viewModel.fetchNextPage()
-            }
-        }
-    }
-
     Scaffold(
         topBar = {
-            TopAppBarWithSearchBar(query = searchQuery,
+            TopAppBarWithSearchBar(
+                query = searchQuery,
                 hintPlaceHolder = "Search Movies...",
-                onQueryChange = { viewModel.updateSearchQuery(it) },
-                onSearch = { viewModel.performSearch() },
+                onQueryChange = { viewModel.searchMovie(it) },
                 focusRequester = focusRequester,
-                onBackPressed = {
-                    navController.popBackStack()
-                }, onClearClicked = {
-                    viewModel.updateSearchQuery("")
+                onBackPressed = onBackPressed,
+                onClearClicked = {
+                    viewModel.searchMovie("")
                 })
         }
     ) { paddingValues ->
-        LazyLoadMediaGridList(
+        LazyLoadVerticalGridList(
             modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            lazyGridState = lazyGridState,
-            list = list,
-            isLoading = isLoading,
-            isNoAnyContent = isNoAnyContent,
-            errorText = error,
-            onRetryClicked = {
-                viewModel.retry()
-            },
-            onItemClicked = {
-                navController.navigate(Route.MovieDetailScreenRoute(it.id))
-            }
+                .fillMaxSize()
+                .padding(paddingValues),
+            list = items,
+            onItemClicked = onItemClicked
         )
     }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
         keyboardController?.show()
-    }*/
+    }
 }
 

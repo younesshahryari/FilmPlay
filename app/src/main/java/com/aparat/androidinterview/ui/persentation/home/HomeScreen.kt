@@ -39,10 +39,11 @@ fun HomeScreen(appNavController: NavHostController) {
             })
     }, content = { paddingValue ->
         Box(modifier = Modifier.padding(paddingValue)) {
-            BottomNavigationNavGraph(movieClicked = { item ->
-                appNavController.navigate(Route.MovieDetailScreenRoute(item.id))
+            BottomNavigationNavGraph(
+                movieClicked = { item ->
+                appNavController.navigate(Route.MovieDetailScreenRoute(item.id, item.title))
             }, tvShowClicked = { item ->
-                appNavController.navigate(Route.TvShowDetailScreenRoute(item.id))
+                appNavController.navigate(Route.TvShowDetailScreenRoute(item.id, item.title))
             },
                 tabsNavController = tabsNavController,
                 startDestination = BottomNavItem.Movie.route

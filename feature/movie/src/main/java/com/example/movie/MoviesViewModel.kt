@@ -14,8 +14,7 @@ import javax.inject.Inject
 class MoviesViewModel @Inject constructor(
     repository: MovieRepository
 ) : ViewModel() {
-
-    val movies: Flow<PagingData<MovieModel>> =
+    val items: Flow<PagingData<MovieModel>> =
         repository.getPopularMovies().cachedIn(viewModelScope)
 
 }

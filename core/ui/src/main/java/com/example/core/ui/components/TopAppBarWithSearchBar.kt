@@ -34,7 +34,7 @@ fun TopAppBarWithSearchBar(
     query: String,
     hintPlaceHolder: String,
     onQueryChange: (String) -> Unit,
-    onSearch: () -> Unit,
+    onSearch: () -> Unit = {},
     focusRequester: FocusRequester,
     onBackPressed: () -> Unit,
     onClearClicked: () -> Unit

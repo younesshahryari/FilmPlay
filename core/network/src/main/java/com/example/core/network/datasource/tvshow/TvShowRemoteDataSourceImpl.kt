@@ -11,20 +11,21 @@ import com.example.core.network.model.TvShowResponse
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class TvShowRemoteDataSourceImpl @Inject constructor(private val tvShowApi: TvShowApi) : TvShowRemoteDataSource {
+class TvShowRemoteDataSourceImpl @Inject constructor(private val tvShowApi: TvShowApi) :
+    TvShowRemoteDataSource {
 
     override suspend fun getTvShow(tvId: Int): TvShowDetailResponse {
         return tvShowApi.getTvShow(tvId)
     }
 
-    override suspend fun getPopularTvShows(pageConfig: PagingConfig): Flow<PagingData<TvShowResponse>> {
+    override fun getPopularTvShows(pageConfig: PagingConfig): Flow<PagingData<TvShowResponse>> {
         return Pager(
             config = pageConfig,
             pagingSourceFactory = { PopularTvShowPagingSource(apiService = tvShowApi) }
         ).flow
     }
 
-    override suspend fun searchTvShows(
+    override fun searchTvShows(
         query: String,
         pageConfig: PagingConfig,
     ): Flow<PagingData<TvShowResponse>> {

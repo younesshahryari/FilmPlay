@@ -11,11 +11,11 @@ interface TvShowRemoteDataSource {
         tvId: Int
     ): TvShowDetailResponse
 
-    suspend fun getPopularTvShows(
+     fun getPopularTvShows(
         pageConfig: PagingConfig
     ): Flow<PagingData<TvShowResponse>>
 
-    suspend fun searchTvShows(
+     fun searchTvShows(
         query: String,
         pageConfig: PagingConfig
     ):  Flow<PagingData<TvShowResponse>>

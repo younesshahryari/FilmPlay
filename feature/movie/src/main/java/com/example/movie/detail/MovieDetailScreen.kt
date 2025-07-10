@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,24 +23,24 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import com.example.core.model.MovieDetailModel
+import com.example.core.ui.R
+import com.example.core.ui.components.Chips
+import com.example.core.ui.components.ErrorContent
+import com.example.core.ui.components.LoadingContent
+import com.example.core.ui.components.Toolbar
+import com.example.core.ui.components.WatchNowButton
 
 @Composable
-fun MovieDetailScreen(navController: NavHostController, itemId: Int) {
-   /* val viewModel: MovieDetailViewModel = hiltViewModel()
-    val data by viewModel.dataState.collectAsStateWithLifecycle()
-    val isLoading by viewModel.loadingState.collectAsStateWithLifecycle()
-    val error by viewModel.errorState.collectAsStateWithLifecycle()
-    val isError = !error.isNullOrEmpty()
-
-    LaunchedEffect(Unit) { viewModel.fetchData(itemId) }
+fun MovieDetailScreen(title: String, onBackPressed: () -> Unit) {
+    val viewModel: MovieDetailViewModel = hiltViewModel()
+    val movieDetailState by viewModel.detailState.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Toolbar(data?.title ?: "Movie", onBackPressClicked = {
-            navController.popBackStack()
-        })
+        Toolbar(title, onBackPressClicked = onBackPressed)
     }) { paddingValues ->
         Box(
             modifier = Modifier
@@ -50,21 +49,29 @@ fun MovieDetailScreen(navController: NavHostController, itemId: Int) {
                 .padding(paddingValues),
             contentAlignment = Alignment.TopCenter
         ) {
-            if (isLoading) {
-                LoadingContent(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(30.dp)
-                )
-            } else if (isError) {
-                ErrorContent(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    error = error!!
-                ) { viewModel.retry(itemId) }
-            } else {
-                data?.let {
-                    DetailContent(it)
+
+            when (movieDetailState) {
+                is MovieDetailState.Loading -> {
+                    LoadingContent(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .size(30.dp)
+                    )
+                }
+
+                is MovieDetailState.Error -> {
+                    val errorMessage = (movieDetailState as MovieDetailState.Error).message
+                    ErrorContent(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        error = errorMessage
+                    ) { viewModel.fetchMovieDetail() }
+
+                }
+
+                is MovieDetailState.Success -> {
+                    val movie = (movieDetailState as MovieDetailState.Success).movie
+                    DetailContent(item = movie)
                 }
             }
         }
@@ -73,7 +80,7 @@ fun MovieDetailScreen(navController: NavHostController, itemId: Int) {
 }
 
 @Composable
-private fun DetailContent(item: com.example.core.model.MovieDetailModel) {
+private fun DetailContent(item: MovieDetailModel) {
 
     Column(
         modifier = Modifier
@@ -81,7 +88,7 @@ private fun DetailContent(item: com.example.core.model.MovieDetailModel) {
             .padding(bottom = 60.dp)
     ) {
         AsyncImage(
-            model = THUMBNAIL_BASE_URL + item.posterPath,
+            model = item.posterPath,
             contentDescription = "Description of the image",
             modifier = Modifier
                 .fillMaxWidth(),
@@ -138,9 +145,8 @@ private fun DetailContent(item: com.example.core.model.MovieDetailModel) {
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-
             Chips("Rating ${item.voteAverage} (${item.voteCount})", Icons.Default.Star)
         }
-    }*/
+    }
 }
 

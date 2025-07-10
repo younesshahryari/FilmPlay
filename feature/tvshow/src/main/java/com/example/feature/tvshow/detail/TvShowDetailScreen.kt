@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -19,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,25 +29,27 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import com.example.core.model.SeasonModel
+import com.example.core.model.TvShowDetailModel
+import com.example.core.ui.R
+import com.example.core.ui.components.Chips
+import com.example.core.ui.components.ErrorContent
+import com.example.core.ui.components.LoadingContent
+import com.example.core.ui.components.SeasonItemContent
+import com.example.core.ui.components.Toolbar
+import com.example.core.ui.components.WatchNowButton
 
 @Composable
-fun TvShowDetailScreen(navController: NavHostController, itemId: Int) {
+fun TvShowDetailScreen(title: String, onBackPressed: () -> Unit) {
 
-  /*  val viewModel: TvShowDetailViewModel = hiltViewModel()
-    val data by viewModel.dataState.collectAsStateWithLifecycle()
-    val isLoading by viewModel.loadingState.collectAsStateWithLifecycle()
-    val error by viewModel.errorState.collectAsStateWithLifecycle()
-    val isError = !error.isNullOrEmpty()
-
-    LaunchedEffect(Unit) { viewModel.fetchData(itemId) }
+    val viewModel: TvShowDetailViewModel = hiltViewModel()
+    val detailState by viewModel.detailState.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Toolbar(data?.name ?: "TvShow", onBackPressClicked = {
-            navController.popBackStack()
-        })
+        Toolbar(title, onBackPressClicked = onBackPressed)
     }) { paddingValues ->
         Box(
             modifier = Modifier
@@ -56,30 +58,38 @@ fun TvShowDetailScreen(navController: NavHostController, itemId: Int) {
                 .padding(paddingValues),
             contentAlignment = Alignment.TopCenter
         ) {
-            if (isLoading) {
-                LoadingContent(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(30.dp)
-                )
-            } else if (isError) {
-                ErrorContent(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    error = error!!
-                ) { viewModel.retry(itemId) }
-            } else {
-                data?.let {
-                    DetailContent(it)
+
+            when (detailState) {
+                is TvShowDetailState.Loading -> {
+                    LoadingContent(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .size(30.dp)
+                    )
+                }
+
+                is TvShowDetailState.Error -> {
+                    val errorMessage = (detailState as TvShowDetailState.Error).message
+                    ErrorContent(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        error = errorMessage
+                    ) { viewModel.fetchDetail() }
+
+                }
+
+                is TvShowDetailState.Success -> {
+                    val movie = (detailState as TvShowDetailState.Success).movie
+                    DetailContent(item = movie)
                 }
             }
         }
-    }*/
+    }
 
 }
 
-/*@Composable
-private fun DetailContent(item: com.example.core.model.TvShowDetailModel) {
+@Composable
+private fun DetailContent(item: TvShowDetailModel) {
 
     Column(
         modifier = Modifier
@@ -87,7 +97,7 @@ private fun DetailContent(item: com.example.core.model.TvShowDetailModel) {
             .padding(bottom = 60.dp)
     ) {
         AsyncImage(
-            model = THUMBNAIL_BASE_URL + item.posterPath,
+            model = item.posterPath,
             contentDescription = "Description of the image",
             modifier = Modifier
                 .fillMaxWidth(),
@@ -157,7 +167,7 @@ private fun DetailContent(item: com.example.core.model.TvShowDetailModel) {
 }
 
 @Composable
-private fun SeasonList(seasonCount: Int, list: List<com.example.core.model.SeasonModel>) {
+private fun SeasonList(seasonCount: Int, list: List<SeasonModel>) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,5 +184,5 @@ private fun SeasonList(seasonCount: Int, list: List<com.example.core.model.Seaso
             SeasonItemContent(item)
         }
     }
-}*/
+}
 

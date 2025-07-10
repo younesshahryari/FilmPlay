@@ -47,6 +47,8 @@ dependencies {
         implementation(androidx.core.ktx)
         implementation(androidx.appcompat)
         implementation(androidx.material3)
+        implementation(androidx.paging.runtime.ktx)
+        implementation(androidx.paging.compose)
         implementation(material)
         testImplementation(junit)
         androidTestImplementation(androidx.junit)
