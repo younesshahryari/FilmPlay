@@ -19,6 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
+
 rootProject.name = "FilmPlay"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
