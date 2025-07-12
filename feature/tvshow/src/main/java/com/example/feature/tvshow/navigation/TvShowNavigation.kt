@@ -24,6 +24,7 @@ fun NavController.navigateToTvShowDetail(
 }
 
 fun NavGraphBuilder.tvShowSection(
+    onBackPressedClicked: () -> Unit,
     onItemClicked: (TvShowModel) -> Unit,
 ) {
     navigation<TvShowDestination.BaseRoute>(startDestination = TvShowDestination.TopRoute) {
@@ -45,7 +46,7 @@ fun NavGraphBuilder.tvShowSection(
         }
 
         composable<TvShowDestination.DetailScreenRoute> {
-            TvShowDetailScreen(onBackPressed = {})
+            TvShowDetailScreen(onBackPressed = onBackPressedClicked)
         }
     }
 }

@@ -22,15 +22,14 @@ fun FilmakNavGraph(
         startDestination = startDestination
     ) {
         movieSection(
+            onBackPressedClicked = { navController.popBackStack() },
             onItemClicked = {
-                navController.navigateToMovieDetail(
-                    it.id,
-                )
+                navController.navigateToMovieDetail(it.id)
             })
-        tvShowSection(onItemClicked = {
-            navController.navigateToTvShowDetail(
-                it.id,
-            )
-        })
+        tvShowSection(
+            onBackPressedClicked = { navController.popBackStack() },
+            onItemClicked = {
+                navController.navigateToTvShowDetail(it.id)
+            })
     }
 }

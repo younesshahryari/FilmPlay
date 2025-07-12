@@ -22,6 +22,7 @@ fun NavController.navigateToMovieDetail(id: Int, navOptions: NavOptionsBuilder.(
 }
 
 fun NavGraphBuilder.movieSection(
+    onBackPressedClicked: () -> Unit,
     onItemClicked: (MovieModel) -> Unit,
 ) {
     navigation<MovieDestination.BaseRoute>(startDestination = MovieDestination.TopRoute) {
@@ -43,7 +44,7 @@ fun NavGraphBuilder.movieSection(
         }
 
         composable<MovieDestination.DetailScreenRoute> {
-            MovieDetailScreen(onBackPressed = {})
+            MovieDetailScreen(onBackPressed = onBackPressedClicked)
         }
     }
 }
