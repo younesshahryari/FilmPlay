@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.theme
+package com.example.app.ui.theme
 
 import android.os.Build
 import androidx.annotation.VisibleForTesting

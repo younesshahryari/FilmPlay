@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.components
+package com.example.app.ui.components
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.aparat.androidinterview.ui.persentation.home.BottomNavItem
+import com.example.app.ui.persentation.home.BottomNavItem
 
 @Composable
 fun BottomNavigationBar(currentRoute: String?, onTabChange: (String) -> Unit) {

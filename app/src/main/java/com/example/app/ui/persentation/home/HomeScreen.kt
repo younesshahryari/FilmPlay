@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.persentation.home
+package com.example.app.ui.persentation.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.aparat.androidinterview.ui.persentation.navigation.Route
-import com.aparat.androidinterview.ui.components.BottomNavigationBar
+import com.example.app.ui.persentation.navigation.Route
+import com.example.app.ui.components.BottomNavigationBar
 import com.example.core.ui.components.Toolbar
 
 @Composable

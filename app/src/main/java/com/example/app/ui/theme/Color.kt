@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.theme
+package com.example.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

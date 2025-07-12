@@ -1,4 +1,4 @@
-package com.aparat.androidinterview
+package com.example.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,9 +13,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
-import com.aparat.androidinterview.ui.persentation.navigation.NavGraph
-import com.aparat.androidinterview.ui.persentation.navigation.Route
-import com.aparat.androidinterview.ui.theme.AparatAndroidInterviewTheme
+import com.example.app.ui.persentation.navigation.NavGraph
+import com.example.app.ui.persentation.navigation.Route
+import com.example.app.ui.theme.AparatAndroidInterviewTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 

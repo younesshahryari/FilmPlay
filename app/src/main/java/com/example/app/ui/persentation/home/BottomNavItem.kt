@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.persentation.home
+package com.example.app.ui.persentation.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

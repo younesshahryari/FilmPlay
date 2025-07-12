@@ -1,11 +1,11 @@
-package com.aparat.androidinterview.ui.persentation.navigation
+package com.example.app.ui.persentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.aparat.androidinterview.ui.persentation.home.HomeScreen
+import com.example.app.ui.persentation.home.HomeScreen
 import com.example.feature.tvshow.detail.TvShowDetailScreen
 import com.example.feature.tvshow.search.SearchTvShowsScreen
 import com.example.movie.detail.MovieDetailScreen

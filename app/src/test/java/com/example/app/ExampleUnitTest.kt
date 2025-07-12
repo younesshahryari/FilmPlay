@@ -1,4 +1,4 @@
-package com.aparat.androidinterview
+package com.example.app
 
 import org.junit.Test
 

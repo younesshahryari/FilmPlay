@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.persentation.extensions
+package com.example.app.ui.persentation.extensions
 
 import arrow.retrofit.adapter.either.networkhandling.CallError
 import arrow.retrofit.adapter.either.networkhandling.HttpError

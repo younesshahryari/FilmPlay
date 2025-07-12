@@ -1,4 +1,4 @@
-package com.aparat.androidinterview
+package com.example.app
 
 const val PAGE = "page"
 const val FIRST_PAGE_NUMBER = 1

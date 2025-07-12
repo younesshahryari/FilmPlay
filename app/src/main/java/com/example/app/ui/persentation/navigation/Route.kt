@@ -1,4 +1,4 @@
-package com.aparat.androidinterview.ui.persentation.navigation
+package com.example.app.ui.persentation.navigation
 
 import kotlinx.serialization.Serializable
 
