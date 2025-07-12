@@ -10,6 +10,7 @@ import androidx.navigation.navDeepLink
 import com.example.core.model.MovieModel
 import com.example.movie.MoviesScreen
 import com.example.movie.detail.MovieDetailScreen
+import com.example.movie.search.SearchMovieScreen
 
 
 fun NavController.navigateToMovie(navOptions: NavOptions) =
@@ -17,6 +18,12 @@ fun NavController.navigateToMovie(navOptions: NavOptions) =
 
 fun NavController.navigateToMovieDetail(id: Int, navOptions: NavOptionsBuilder.() -> Unit = {}) {
     navigate(route = MovieDestination.DetailScreenRoute(id)) {
+        navOptions()
+    }
+}
+
+fun NavController.navigateToSearchMovie(navOptions: NavOptionsBuilder.() -> Unit = {}) {
+    navigate(route = MovieDestination.SearchRoute) {
         navOptions()
     }
 }
@@ -45,6 +52,10 @@ fun NavGraphBuilder.movieSection(
 
         composable<MovieDestination.DetailScreenRoute> {
             MovieDetailScreen(onBackPressed = onBackPressedClicked)
+        }
+
+        composable<MovieDestination.SearchRoute> {
+            SearchMovieScreen(onBackPressed = onBackPressedClicked, onItemClicked = onItemClicked)
         }
     }
 }

@@ -12,24 +12,26 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.example.app.navigation.TopLevelDestination
+import com.example.feature.tvshow.navigation.navigateToSearchTvShow
 import com.example.feature.tvshow.navigation.navigateToTvShow
 import com.example.movie.navigation.navigateToMovie
+import com.example.movie.navigation.navigateToSearchMovie
 
 @Composable
 fun rememberNiaAppState(
     navController: NavHostController = rememberNavController(),
-): NiaAppState {
+): FilmakAppState {
     return remember(
         navController,
     ) {
-        NiaAppState(
+        FilmakAppState(
             navController = navController,
         )
     }
 }
 
 @Stable
-class NiaAppState(
+class FilmakAppState(
     val navController: NavHostController,
 ) {
     private val previousDestination = mutableStateOf<NavDestination?>(null)
@@ -86,6 +88,16 @@ class NiaAppState(
         when (topLevelDestination) {
             TopLevelDestination.Movie -> navController.navigateToMovie(topLevelNavOptions)
             TopLevelDestination.Show -> navController.navigateToTvShow(topLevelNavOptions)
+        }
+    }
+
+    fun navigationToSearch(
+        topLevelDestination: TopLevelDestination?
+    ) {
+        if (topLevelDestination?.baseRoute == TopLevelDestination.Movie.baseRoute) {
+            navController.navigateToSearchMovie()
+        } else {
+            navController.navigateToSearchTvShow()
         }
     }
 }

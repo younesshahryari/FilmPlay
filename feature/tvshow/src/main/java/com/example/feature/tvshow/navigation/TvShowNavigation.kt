@@ -10,6 +10,7 @@ import androidx.navigation.navDeepLink
 import com.example.core.model.TvShowModel
 import com.example.feature.tvshow.TvShowScreen
 import com.example.feature.tvshow.detail.TvShowDetailScreen
+import com.example.feature.tvshow.search.SearchTvShowsScreen
 
 fun NavController.navigateToTvShow(navOptions: NavOptions) =
     navigate(route = TvShowDestination.TopRoute, navOptions)
@@ -19,6 +20,12 @@ fun NavController.navigateToTvShowDetail(
     navOptions: NavOptionsBuilder.() -> Unit = {}
 ) {
     navigate(route = TvShowDestination.DetailScreenRoute(id)) {
+        navOptions()
+    }
+}
+
+fun NavController.navigateToSearchTvShow(navOptions: NavOptionsBuilder.() -> Unit = {}) {
+    navigate(route = TvShowDestination.SearchRoute) {
         navOptions()
     }
 }
@@ -47,6 +54,10 @@ fun NavGraphBuilder.tvShowSection(
 
         composable<TvShowDestination.DetailScreenRoute> {
             TvShowDetailScreen(onBackPressed = onBackPressedClicked)
+        }
+
+        composable<TvShowDestination.SearchRoute> {
+            SearchTvShowsScreen(onBackPressed = onBackPressedClicked, onItemClicked = onItemClicked)
         }
     }
 }

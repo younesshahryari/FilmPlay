@@ -32,15 +32,18 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.app.navigation.FilmakNavGraph
+import com.example.app.navigation.TopLevelDestination
 import com.example.core.ui.components.NiaNavigationSuiteScaffold
 import com.example.core.ui.components.NiaTopAppBar
 import com.example.core.ui.icon.NiaIcons
+import com.example.feature.tvshow.navigation.navigateToSearchTvShow
 import com.example.movie.navigation.MovieDestination
+import com.example.movie.navigation.navigateToSearchMovie
 import kotlin.reflect.KClass
 
 @Composable
 fun FilmakApp(
-    appState: NiaAppState,
+    appState: FilmakAppState,
     modifier: Modifier = Modifier,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
@@ -60,7 +63,7 @@ fun FilmakApp(
     ExperimentalComposeUiApi::class,
 )
 internal fun FilmakApp(
-    appState: NiaAppState,
+    appState: FilmakAppState,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
@@ -130,7 +133,9 @@ internal fun FilmakApp(
                             containerColor = Color.Transparent,
                         ),
                         onActionClick = { /*onTopAppBarActionClick()*/ },
-                        onNavigationClick = { /*appState.navigateToSearch()*/ },
+                        onNavigationClick = {
+                            appState.navigationToSearch(destination)
+                        },
                     )
                 }
 
@@ -157,4 +162,4 @@ internal fun FilmakApp(
 private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
     this?.hierarchy?.any {
         it.hasRoute(route)
-    } ?: false
+    } == true

@@ -31,7 +31,7 @@ fun SearchTvShowsScreen(onItemClicked: (TvShowModel) -> Unit, onBackPressed: () 
         topBar = {
             TopAppBarWithSearchBar(
                 query = searchQuery,
-                hintPlaceHolder = "Search Movies...",
+                hintPlaceHolder = "Search TvShows...",
                 onQueryChange = { viewModel.searchMovie(it) },
                 focusRequester = focusRequester,
                 onBackPressed = onBackPressed,

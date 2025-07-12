@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -58,11 +57,7 @@ fun MovieDetailScreen(onBackPressed: () -> Unit) {
 
             when (movieDetailState) {
                 is MovieDetailState.Loading -> {
-                    LoadingContent(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(30.dp)
-                    )
+                    LoadingContent(modifier = Modifier.padding(top = 16.dp))
                 }
 
                 is MovieDetailState.Error -> {
