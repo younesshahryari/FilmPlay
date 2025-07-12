@@ -11,10 +11,11 @@ import com.example.core.ui.components.LazyLoadVerticalGridList
 @Composable
 fun TvShowScreen(onItemClicked: (TvShowModel) -> Unit) {
     val viewModel: TvShowViewModel = hiltViewModel()
-    val movies = viewModel.items.collectAsLazyPagingItems()
+    val items = viewModel.items.collectAsLazyPagingItems()
     LazyLoadVerticalGridList(
-        modifier = Modifier.fillMaxSize(),
-        list = movies,
+        modifier = Modifier
+            .fillMaxSize(),
+        list = items,
         onItemClicked = onItemClicked
     )
 }

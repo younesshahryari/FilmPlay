@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -41,6 +42,8 @@ android {
 
 dependencies {
     implementation(projects.core.model)
+    implementation(libs.androidx.adaptive.android)
+    implementation(libs.androidx.material3.adaptive.navigation.suite.android)
     with(libs) {
         implementation(platform(androidx.compose.bom))
         implementation(coil)
@@ -49,6 +52,7 @@ dependencies {
         implementation(androidx.material3)
         implementation(androidx.paging.runtime.ktx)
         implementation(androidx.paging.compose)
+        implementation(kotlinx.serialization.json)
         implementation(material)
         testImplementation(junit)
         androidTestImplementation(androidx.junit)

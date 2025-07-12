@@ -3,8 +3,10 @@ package com.example.feature.tvshow.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.example.core.data.model.Result
 import com.example.core.data.repository.tvShow.TvShowRepository
+import com.example.feature.tvshow.navigation.TvShowDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +23,7 @@ class TvShowDetailViewModel @Inject constructor(
     private val _detailState = MutableStateFlow<TvShowDetailState>(TvShowDetailState.Loading)
     val detailState: StateFlow<TvShowDetailState> = _detailState.asStateFlow()
 
-    private val id: Int = checkNotNull(savedStateHandle["tvShowId"])
+    private val id: Int = savedStateHandle.toRoute<TvShowDestination.DetailScreenRoute>().id
 
     init {
         fetchDetail()

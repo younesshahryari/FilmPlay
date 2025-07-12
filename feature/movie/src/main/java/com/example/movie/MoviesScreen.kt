@@ -13,7 +13,8 @@ fun MoviesScreen(onItemClicked: (MovieModel) -> Unit) {
     val viewModel: MoviesViewModel = hiltViewModel()
     val items = viewModel.items.collectAsLazyPagingItems()
     LazyLoadVerticalGridList(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         list = items,
         onItemClicked = onItemClicked
     )

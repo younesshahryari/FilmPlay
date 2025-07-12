@@ -3,12 +3,14 @@ package com.example.movie.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.example.core.data.repository.movie.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.example.core.data.model.Result
+import com.example.movie.navigation.MovieDestination
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +23,7 @@ class MovieDetailViewModel @Inject constructor(
     private val _detailState = MutableStateFlow<MovieDetailState>(MovieDetailState.Loading)
     val detailState: StateFlow<MovieDetailState> = _detailState.asStateFlow()
 
-    private val id: Int = checkNotNull(savedStateHandle["movieId"])
+    private val id: Int = savedStateHandle.toRoute<MovieDestination.DetailScreenRoute>().id
 
     init {
         fetchMovieDetail()

@@ -59,6 +59,7 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.feature.movie)
     implementation(projects.feature.tvshow)
+    implementation(libs.androidx.adaptive.android)
 
     with(libs) {
         implementation(material)
