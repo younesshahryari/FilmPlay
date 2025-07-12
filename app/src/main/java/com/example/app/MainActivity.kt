@@ -15,7 +15,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.example.app.ui.persentation.navigation.NavGraph
 import com.example.app.ui.persentation.navigation.Route
-import com.example.app.ui.theme.AparatAndroidInterviewTheme
+import com.example.app.ui.theme.FilmPlayTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AparatAndroidInterviewTheme {
+            FilmPlayTheme {
                 val navController = rememberNavController()
                 val systemUiColor = rememberSystemUiController()
                 systemUiColor.setSystemBarsColor(

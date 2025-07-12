@@ -78,7 +78,7 @@ val DarkDefaultColorScheme = darkColorScheme(
 )
 
 @Composable
-fun AparatAndroidInterviewTheme(
+fun FilmPlayTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
