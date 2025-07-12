@@ -33,14 +33,20 @@ import com.example.core.ui.components.Toolbar
 import com.example.core.ui.components.WatchNowButton
 
 @Composable
-fun MovieDetailScreen(title: String, onBackPressed: () -> Unit) {
+fun MovieDetailScreen(onBackPressed: () -> Unit) {
     val viewModel: MovieDetailViewModel = hiltViewModel()
     val movieDetailState by viewModel.detailState.collectAsStateWithLifecycle()
+
+    val toolbarTitle = when (movieDetailState) {
+        is MovieDetailState.Success -> (movieDetailState as MovieDetailState.Success).movie.title
+        is MovieDetailState.Error -> "Movie Details"
+        MovieDetailState.Loading -> "Loading..."
+    }
 
     val scrollState = rememberScrollState()
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Toolbar(title, onBackPressClicked = onBackPressed)
+        Toolbar(toolbarTitle, onBackPressClicked = onBackPressed)
     }) { paddingValues ->
         Box(
             modifier = Modifier
