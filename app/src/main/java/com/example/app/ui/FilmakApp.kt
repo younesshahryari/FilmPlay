@@ -32,13 +32,10 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.app.navigation.FilmakNavGraph
-import com.example.app.navigation.TopLevelDestination
 import com.example.core.ui.components.NiaNavigationSuiteScaffold
 import com.example.core.ui.components.NiaTopAppBar
 import com.example.core.ui.icon.NiaIcons
-import com.example.feature.tvshow.navigation.navigateToSearchTvShow
 import com.example.movie.navigation.MovieDestination
-import com.example.movie.navigation.navigateToSearchMovie
 import kotlin.reflect.KClass
 
 @Composable
