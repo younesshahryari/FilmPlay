@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.core.model.MovieModel
-import com.example.core.ui.components.LazyLoadVerticalGridList
+import com.example.core.ui.LazyLoadVerticalGridList
 
 @Composable
 fun MoviesScreen(onItemClicked: (MovieModel) -> Unit) {

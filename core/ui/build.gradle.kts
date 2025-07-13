@@ -41,9 +41,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.designsystem)
     implementation(projects.core.model)
-    implementation(libs.androidx.adaptive.android)
-    implementation(libs.androidx.material3.adaptive.navigation.suite.android)
     with(libs) {
         implementation(platform(androidx.compose.bom))
         implementation(coil)

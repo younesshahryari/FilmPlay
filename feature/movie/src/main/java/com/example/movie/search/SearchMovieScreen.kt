@@ -10,12 +10,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.core.model.MovieModel
-import com.example.core.ui.components.LazyLoadVerticalGridList
-import com.example.core.ui.components.TopAppBarWithSearchBar
+import com.example.core.ui.LazyLoadVerticalGridList
+import com.example.core.ui.TopAppBarWithSearchBar
+import com.example.feature.movie.R
 
 @Composable
 fun SearchMovieScreen(onItemClicked: (MovieModel) -> Unit, onBackPressed: () -> Unit) {
@@ -31,7 +33,7 @@ fun SearchMovieScreen(onItemClicked: (MovieModel) -> Unit, onBackPressed: () -> 
         topBar = {
             TopAppBarWithSearchBar(
                 query = searchQuery,
-                hintPlaceHolder = "Search Movies...",
+                hintPlaceHolder = stringResource(R.string.search_movies),
                 onQueryChange = { viewModel.searchMovie(it) },
                 focusRequester = focusRequester,
                 onBackPressed = onBackPressed,

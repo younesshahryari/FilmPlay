@@ -14,8 +14,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,13 +31,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.core.model.SeasonModel
 import com.example.core.model.TvShowDetailModel
-import com.example.core.ui.R
-import com.example.core.ui.components.Chips
-import com.example.core.ui.components.ErrorContent
-import com.example.core.ui.components.LoadingContent
-import com.example.core.ui.components.SeasonItemContent
-import com.example.core.ui.components.Toolbar
-import com.example.core.ui.components.WatchNowButton
+import com.example.core.ui.Chips
+import com.example.core.ui.ErrorContent
+import com.example.core.ui.LoadingContent
+import com.example.core.ui.SeasonItemContent
+import com.example.core.ui.Toolbar
+import com.example.core.ui.WatchNowButton
+import com.example.core.icon.FilmakIcons
+import com.example.feature.tvshow.R
 
 @Composable
 fun TvShowDetailScreen(onBackPressed: () -> Unit) {
@@ -48,8 +48,8 @@ fun TvShowDetailScreen(onBackPressed: () -> Unit) {
 
     val toolbarTitle = when (detailState) {
         is TvShowDetailState.Success -> (detailState as TvShowDetailState.Success).movie.name
-        is TvShowDetailState.Error -> "TvShow Details"
-        TvShowDetailState.Loading -> "Loading..."
+        is TvShowDetailState.Error -> stringResource(R.string.tv_show_details_title)
+        TvShowDetailState.Loading -> stringResource(R.string.loading_title)
     }
 
     val scrollState = rememberScrollState()
@@ -78,6 +78,7 @@ fun TvShowDetailScreen(onBackPressed: () -> Unit) {
                     val errorMessage = (detailState as TvShowDetailState.Error).message
                     ErrorContent(
                         modifier = Modifier
+                            .fillMaxWidth()
                             .padding(16.dp),
                         error = errorMessage
                     ) { viewModel.fetchDetail() }
@@ -104,12 +105,12 @@ private fun DetailContent(item: TvShowDetailModel) {
     ) {
         AsyncImage(
             model = item.posterPath,
-            contentDescription = "Description of the image",
+            contentDescription = stringResource(R.string.cd_tv_show_poster),
             modifier = Modifier
                 .fillMaxWidth(),
             contentScale = ContentScale.FillWidth,
-            placeholder = painterResource(R.drawable.ic_holder),
-            error = painterResource(R.drawable.ic_holder)
+            placeholder = painterResource(com.example.core.ui.R.drawable.ic_holder),
+            error = painterResource(com.example.core.ui.R.drawable.ic_holder)
         )
         Column(
             modifier = Modifier
@@ -148,20 +149,30 @@ private fun DetailContent(item: TvShowDetailModel) {
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            val genres = item.genreResponses?.joinToString(", ") { it.name } ?: "No Genres"
+            val genres = item.genreResponses?.joinToString(", ") { it.name }
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                text = "Genre(s): $genres",
+                text = stringResource(
+                    R.string.tv_show_genres,
+                    genres ?: stringResource(R.string.no_genres_available)
+                ),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
 
             Row {
-                Chips("Rating ${item.voteAverage} (${item.voteCount})", Icons.Default.Star)
+                Chips(
+                    title = stringResource(
+                        R.string.tv_show_rating,
+                        item.voteAverage,
+                        item.voteCount
+                    ),
+                    icon = FilmakIcons.Star
+                )
                 Spacer(modifier = Modifier.width(8.dp))
-                Chips("${item.numberOfEpisodes} Episode(s)")
+                Chips(title = stringResource(R.string.tv_show_episodes, item.numberOfEpisodes))
             }
         }
 
@@ -178,7 +189,7 @@ private fun SeasonList(seasonCount: Int, list: List<SeasonModel>) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 20.dp, bottom = 10.dp, start = 20.dp, end = 20.dp),
-        text = "$seasonCount Season(s)",
+        text = stringResource(R.string.tv_show_seasons_count, seasonCount),
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.onSurface,
     )
@@ -191,4 +202,3 @@ private fun SeasonList(seasonCount: Int, list: List<SeasonModel>) {
         }
     }
 }
-

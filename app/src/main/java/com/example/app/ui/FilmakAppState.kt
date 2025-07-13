@@ -18,7 +18,7 @@ import com.example.movie.navigation.navigateToMovie
 import com.example.movie.navigation.navigateToSearchMovie
 
 @Composable
-fun rememberNiaAppState(
+fun rememberFilmakAppState(
     navController: NavHostController = rememberNavController(),
 ): FilmakAppState {
     return remember(

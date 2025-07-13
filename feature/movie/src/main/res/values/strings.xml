@@ -1,2 +1,17 @@
 <resources>
+    <string name="loading_title">Loading…</string>
+    <string name="no_genres_available">No Genres</string>
+
+    <string name="tv_show_details_title">TV Show Details</string>
+    <string name="cd_tv_show_poster">TV show poster image</string>
+    <string name="tv_show_genres">Genre(s): %s</string>
+    <string name="tv_show_rating">Rating %.1f (%d)</string>
+    <string name="tv_show_episodes">%d Episode(s)</string>
+    <string name="tv_show_seasons_count">%d Season(s)</string>
+
+    <string name="movie_details_title">Movie Details</string>
+    <string name="cd_movie_poster">Movie poster image</string>
+    <string name="movie_genres">Genre(s): %s</string>
+    <string name="movie_rating">Rating %.1f (%d)</string>
+    <string name="search_movies">Search Movies…</string>
 </resources>

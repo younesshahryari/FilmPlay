@@ -59,10 +59,11 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.feature.movie)
     implementation(projects.feature.tvshow)
-    implementation(libs.androidx.adaptive.android)
+    implementation(projects.core.designsystem)
 
     with(libs) {
         implementation(material)
+        implementation(androidx.adaptive.android)
         implementation(androidx.splashscreen)
         implementation(androidx.ui)
         implementation(androidx.core.ktx)
@@ -80,7 +81,6 @@ dependencies {
         implementation(timber)
         implementation(hilt.compose)
         implementation(hilt.android)
-        implementation(bundles.arrow)
         implementation(kotlin.immutable)
         implementation(kotlinx.serialization.json)
 

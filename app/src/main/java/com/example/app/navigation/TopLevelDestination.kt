@@ -1,11 +1,9 @@
 package com.example.app.navigation
 
 import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.app.R
+import com.example.core.icon.FilmakIcons
 import com.example.feature.tvshow.navigation.TvShowDestination
 import com.example.movie.navigation.MovieDestination
 import kotlin.reflect.KClass
@@ -22,13 +20,13 @@ enum class TopLevelDestination(
         route = MovieDestination.TopRoute::class,
         tabName = R.string.movie,
         toolbarTitle = R.string.popular_tv_movies,
-        icon = Icons.Default.Home,
+        icon = FilmakIcons.Home,
     ),
     Show(
         baseRoute = TvShowDestination.BaseRoute::class,
         route = TvShowDestination.TopRoute::class,
         tabName = R.string.tv_show,
         toolbarTitle = R.string.popular_tv_shows,
-        icon = Icons.Default.PlayArrow,
+        icon = FilmakIcons.PlayArrow,
     )
 }

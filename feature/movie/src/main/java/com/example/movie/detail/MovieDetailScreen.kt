@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,18 +16,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.core.model.MovieDetailModel
-import com.example.core.ui.R
-import com.example.core.ui.components.Chips
-import com.example.core.ui.components.ErrorContent
-import com.example.core.ui.components.LoadingContent
-import com.example.core.ui.components.Toolbar
-import com.example.core.ui.components.WatchNowButton
+import com.example.core.ui.Chips
+import com.example.core.ui.ErrorContent
+import com.example.core.ui.LoadingContent
+import com.example.core.ui.Toolbar
+import com.example.core.ui.WatchNowButton
+import com.example.core.icon.FilmakIcons
+import com.example.feature.movie.R
 
 @Composable
 fun MovieDetailScreen(onBackPressed: () -> Unit) {
@@ -38,8 +38,8 @@ fun MovieDetailScreen(onBackPressed: () -> Unit) {
 
     val toolbarTitle = when (movieDetailState) {
         is MovieDetailState.Success -> (movieDetailState as MovieDetailState.Success).movie.title
-        is MovieDetailState.Error -> "Movie Details"
-        MovieDetailState.Loading -> "Loading..."
+        is MovieDetailState.Error -> stringResource(R.string.movie_details_title)
+        MovieDetailState.Loading -> stringResource(R.string.loading_title)
     }
 
     val scrollState = rememberScrollState()
@@ -64,6 +64,7 @@ fun MovieDetailScreen(onBackPressed: () -> Unit) {
                     val errorMessage = (movieDetailState as MovieDetailState.Error).message
                     ErrorContent(
                         modifier = Modifier
+                            .fillMaxWidth()
                             .padding(16.dp),
                         error = errorMessage
                     ) { viewModel.fetchMovieDetail() }
@@ -77,7 +78,6 @@ fun MovieDetailScreen(onBackPressed: () -> Unit) {
             }
         }
     }
-
 }
 
 @Composable
@@ -90,12 +90,12 @@ private fun DetailContent(item: MovieDetailModel) {
     ) {
         AsyncImage(
             model = item.posterPath,
-            contentDescription = "Description of the image",
+            contentDescription = stringResource(R.string.cd_movie_poster),
             modifier = Modifier
                 .fillMaxWidth(),
             contentScale = ContentScale.FillWidth,
-            placeholder = painterResource(R.drawable.ic_holder),
-            error = painterResource(R.drawable.ic_holder)
+            placeholder = painterResource(com.example.core.ui.R.drawable.ic_holder),
+            error = painterResource(com.example.core.ui.R.drawable.ic_holder)
         )
         Column(
             modifier = Modifier
@@ -107,7 +107,7 @@ private fun DetailContent(item: MovieDetailModel) {
                     .padding(vertical = 10.dp)
                     .fillMaxWidth()
             ) {
-
+                // Handle Watch Now click
             }
             Text(
                 modifier = Modifier
@@ -137,17 +137,26 @@ private fun DetailContent(item: MovieDetailModel) {
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            val genres = item.genreResponses?.joinToString(", ") { it.name } ?: "No Genres"
+            val genres = item.genreResponses?.joinToString(", ") { it.name }
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                text = "Genre(s): $genres",
+                text = stringResource(
+                    R.string.movie_genres,
+                    genres ?: stringResource(R.string.no_genres_available)
+                ),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Chips("Rating ${item.voteAverage} (${item.voteCount})", Icons.Default.Star)
+            Chips(
+                title = stringResource(
+                    R.string.movie_rating,
+                    item.voteAverage,
+                    item.voteCount
+                ),
+                icon = FilmakIcons.Star
+            )
         }
     }
 }
-

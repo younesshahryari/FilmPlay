@@ -3,6 +3,6 @@
     <style name="App.Starting.Theme" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#FCFCFC</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
-        <item name="postSplashScreenTheme">@style/Theme.FilmPlay</item>
+        <item name="postSplashScreenTheme">@style/Theme.Filmak</item>
     </style>
 </resources>

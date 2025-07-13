@@ -32,9 +32,10 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.example.app.navigation.FilmakNavGraph
-import com.example.core.ui.components.NiaNavigationSuiteScaffold
-import com.example.core.ui.components.NiaTopAppBar
-import com.example.core.ui.icon.NiaIcons
+import com.example.core.designsystem.component.FilmakBackground
+import com.example.core.designsystem.component.FilmakNavigationSuiteScaffold
+import com.example.core.designsystem.component.FilmakTopAppBar
+import com.example.core.icon.FilmakIcons
 import com.example.movie.navigation.MovieDestination
 import kotlin.reflect.KClass
 
@@ -44,7 +45,7 @@ fun FilmakApp(
     modifier: Modifier = Modifier,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
-    Box(modifier = modifier) {
+    FilmakBackground(modifier = modifier) {
         val snackBarHostState = remember { SnackbarHostState() }
         FilmakApp(
             appState = appState,
@@ -52,6 +53,7 @@ fun FilmakApp(
             windowAdaptiveInfo = windowAdaptiveInfo,
         )
     }
+
 }
 
 @Composable
@@ -68,7 +70,7 @@ internal fun FilmakApp(
 
     val currentDestination = appState.currentDestination
 
-    NiaNavigationSuiteScaffold(
+    FilmakNavigationSuiteScaffold(
         navigationSuiteItems = {
             appState.topLevelDestinations.forEach { destination ->
                 val selected = currentDestination.isRouteInHierarchy(destination.baseRoute)
@@ -120,11 +122,11 @@ internal fun FilmakApp(
 
                 if (destination != null) {
                     shouldShowTopAppBar = true
-                    NiaTopAppBar(
+                    FilmakTopAppBar(
                         titleRes = destination.toolbarTitle,
-                        navigationIcon = NiaIcons.Search,
+                        navigationIcon = FilmakIcons.Search,
                         navigationIconContentDescription = "",
-                        actionIcon = NiaIcons.Settings,
+                        actionIcon = FilmakIcons.Settings,
                         actionIconContentDescription = "",
                         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                             containerColor = Color.Transparent,
