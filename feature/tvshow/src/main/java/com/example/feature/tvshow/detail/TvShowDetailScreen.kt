@@ -31,11 +31,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.core.model.SeasonModel
 import com.example.core.model.TvShowDetailModel
-import com.example.core.ui.Chips
+import com.example.core.designsystem.component.Chip
 import com.example.core.ui.ErrorContent
 import com.example.core.ui.LoadingContent
 import com.example.core.ui.SeasonItemContent
-import com.example.core.ui.Toolbar
+import com.example.core.designsystem.component.FilmakToolbar
 import com.example.core.ui.WatchNowButton
 import com.example.core.icon.FilmakIcons
 import com.example.feature.tvshow.R
@@ -55,7 +55,7 @@ fun TvShowDetailScreen(onBackPressed: () -> Unit) {
     val scrollState = rememberScrollState()
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Toolbar(toolbarTitle, onBackPressClicked = onBackPressed)
+        FilmakToolbar(toolbarTitle, onBackPressClicked = onBackPressed)
     }) { paddingValues ->
         Box(
             modifier = Modifier
@@ -163,7 +163,7 @@ private fun DetailContent(item: TvShowDetailModel) {
             )
 
             Row {
-                Chips(
+                Chip(
                     title = stringResource(
                         R.string.tv_show_rating,
                         item.voteAverage,
@@ -172,7 +172,7 @@ private fun DetailContent(item: TvShowDetailModel) {
                     icon = FilmakIcons.Star
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Chips(title = stringResource(R.string.tv_show_episodes, item.numberOfEpisodes))
+                Chip(title = stringResource(R.string.tv_show_episodes, item.numberOfEpisodes))
             }
         }
 

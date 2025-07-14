@@ -1,4 +1,4 @@
-package com.example.core.ui
+package com.example.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Chips(modifier: Modifier = Modifier, title: String, icon: ImageVector? = null) {
+fun Chip(modifier: Modifier = Modifier, title: String, icon: ImageVector? = null) {
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(100))

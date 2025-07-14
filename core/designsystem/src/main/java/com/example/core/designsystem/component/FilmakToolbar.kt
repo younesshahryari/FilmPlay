@@ -1,4 +1,4 @@
-package com.example.core.ui
+package com.example.core.designsystem.component
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,7 +16,7 @@ import com.example.core.icon.FilmakIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Toolbar(
+fun FilmakToolbar(
     title: String?,
     onSearchClicked: (() -> Unit)? = null,
     onBackPressClicked: (() -> Unit)? = null

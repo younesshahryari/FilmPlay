@@ -23,10 +23,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.core.model.MovieDetailModel
-import com.example.core.ui.Chips
+import com.example.core.designsystem.component.Chip
 import com.example.core.ui.ErrorContent
 import com.example.core.ui.LoadingContent
-import com.example.core.ui.Toolbar
+import com.example.core.designsystem.component.FilmakToolbar
 import com.example.core.ui.WatchNowButton
 import com.example.core.icon.FilmakIcons
 import com.example.feature.movie.R
@@ -45,7 +45,7 @@ fun MovieDetailScreen(onBackPressed: () -> Unit) {
     val scrollState = rememberScrollState()
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        Toolbar(toolbarTitle, onBackPressClicked = onBackPressed)
+        FilmakToolbar(toolbarTitle, onBackPressClicked = onBackPressed)
     }) { paddingValues ->
         Box(
             modifier = Modifier
@@ -149,7 +149,7 @@ private fun DetailContent(item: MovieDetailModel) {
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Chips(
+            Chip(
                 title = stringResource(
                     R.string.movie_rating,
                     item.voteAverage,

@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.core.model.TvShowModel
 import com.example.core.ui.LazyLoadVerticalGridList
-import com.example.core.ui.TopAppBarWithSearchBar
+import com.example.core.designsystem.component.TopAppBarWithSearchBar
 import com.example.feature.tvshow.R
 
 @Composable
